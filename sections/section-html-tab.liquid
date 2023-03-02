@@ -1,0 +1,634 @@
+<div class="html-code" data-section-id="{{ section.id }}" data-section-type="html-section">
+  <div class="html-code-wrapper" style="background-color: {{section.settings.bg_color}}; margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};"> 
+    {%- if section.blocks.size > 0 -%} 
+    <div class="container">
+      <div class="row" style="margin-left: -{{section.settings.space_sction}}px; margin-right: -{{section.settings.space_sction}}px;">
+        {%- for block in section.blocks -%}
+        {%- case block.type -%} 
+        {%- when 'banner_panel' -%}
+        <div class="porto-products title-{{block.settings.title_border_style}} {% if block.settings.item_hidden_tablet != blank %}hidden-table{% endif %}{% if block.settings.item_hidden_mobile != blank %} hidden-phone{% endif %} col-sm-{{block.settings.item_width_mobile}} col-lg-{{block.settings.item_width_desktop}} col-md-{{block.settings.item_width_tablet}}" style="padding-top: 14px;padding-left: {{section.settings.space_sction}}px;padding-right: {{section.settings.space_sction}}px;">
+          {%- if block.settings.title != '' -%}
+          <h2 class="section-title text-{{block.settings.title_align}}" style="font-weight:600;padding-bottom: 19px;font-size:18px;margin-bottom: 30px;border-color:rgba(0,0,0,0.03);">
+            {%- if block.settings.title_border_style == 'border-middle' and block.settings.title_align != 'left' -%}
+            <span class="line-l"></span>
+            {%- endif -%}
+            <span class="inline-title">
+              {%- if settings.language_enable -%}
+              <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+              <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+              {%- else -%}
+              {{ block.settings.title | split: '|' | first }}
+              {%- endif -%}
+            </span>
+            {%- if block.settings.title_border_style == 'border-middle' and block.settings.title_align != 'right' -%}
+            <span class="line-r"></span>
+            {%- endif -%}
+          </h2>
+          {%- endif -%} 
+          <div class="banner-section">
+            <a href="{{block.settings.banner_url}}">
+              {%- if block.settings.banner != blank -%}
+              {%- assign banner_image = block.settings.banner | img_url: '450x257' -%}
+              {%- else -%}
+              {%- assign banner_image = '450x257.png' | asset_url -%}
+              {%- endif -%}
+              <img data-src="{{ banner_image }}"/>
+            </a>
+          </div>
+        </div>
+        {%- when 'tab_panel' -%}
+        <div class="{% if block.settings.item_hidden_tablet != blank %}hidden-table {% endif %}{% if block.settings.item_hidden_mobile != blank %}hidden-phone {% endif %}col-sm-{{block.settings.item_width_mobile}} col-lg-{{block.settings.item_width_desktop}} col-md-{{block.settings.item_width_tablet}}" style="padding-left: {{section.settings.space_sction}}px;padding-right: {{section.settings.space_sction}}px;">
+          <div class="tabs tabs-simple tabs-secondary">
+            <ul class="nav nav-tabs" role="tablist">
+              {%- assign numb = 0 -%}
+              {%- for block in section.blocks -%} 
+              {%- if block.type == 'tab_item' -%}
+              {%- assign numb = numb | plus: 1 -%}
+              <li class="nav-item{% if numb == 1%} first{% endif %}">
+                <a href="#tab-{{ block.id }}" class="nav-link{% if numb == 1 %} active{% endif %}" data-toggle="tab">
+                  {%- if settings.language_enable -%}
+                  <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+                  <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+                  {%- else -%}
+                  {{ block.settings.title | split: '|' | first }}
+                  {%- endif -%}
+                </a>
+              </li>
+              {%- endif -%}
+              {%- endfor -%}
+            </ul>
+            <div class="tab-content">
+              {%- assign numb2 = 0 -%}
+              {%- for block in section.blocks -%}
+              {%- if block.type == 'tab_item' -%}
+              {%- assign numb2 = numb2 | plus: 1 -%}
+              <div class="tab-pane {% if numb2 == 1%}active{% endif %}" id="tab-{{ block.id }}">
+                {%- if settings.language_enable -%}
+                <div class="lang1">
+                  {%- assign content_lg1 = block.settings.html | split: '[lang2]' | first -%}
+                  {% include 'shortcode' load: content_lg1 %}
+                </div>
+                <div class="lang2">
+                  {%- assign content_lg2 = block.settings.html | split: '[lang2]' | last -%}
+                  {% include 'shortcode' load: content_lg2 %} 
+                </div>
+                {%- else -%}
+                {%- assign content_lg = block.settings.html | split: '[lang2]' | first -%}
+                {% include 'shortcode' load: content_lg %}
+                {%- endif -%} 
+              </div>
+              {%- endif -%}
+              {%- endfor -%} 
+            </div>
+          </div>
+        </div>
+        {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    {%- endif-%}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Block Html Tab", 
+  "settings": [ 
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title" 
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+    {
+      "type": "select",
+      "id": "space_sction",
+      "label": "Space section",
+      "options": [
+        {
+          "value": "10",
+          "label": "10"
+        },
+        {
+          "value": "15",
+          "label": "15"
+        } 
+      ],
+      "default": "15"
+    }, 
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background color",
+      "default" : "#f4f4f4"
+    }
+  ],  
+  "blocks": [
+    {
+      "type": "tab_panel",
+      "name": "Tab Panel",
+	  "limit": 1,
+      "settings": [ 
+        {
+          "type": "header", 
+          "content": "Column Settings"
+        }, 
+        {
+          "type": "select",
+          "id": "item_width_desktop",
+          "label": "Item Width Desktop",
+          "options": [
+            {
+              "value": "1",
+              "label": "1/12"
+            },
+            {
+              "value": "2",
+              "label": "2/12"
+            },
+            {
+              "value": "3",
+              "label": "3/12"
+            },
+            {
+              "value": "4",
+              "label": "4/12"
+            },
+            {
+              "value": "5",
+              "label": "5/12"
+            },
+            {
+              "value": "6",
+              "label": "6/12"
+            },
+            {
+              "value": "7",
+              "label": "7/12"
+            },
+            {
+              "value": "8",
+              "label": "8/12"
+            },
+            {
+              "value": "9",
+              "label": "9/12"
+            },
+            {
+              "value": "10",
+              "label": "10/12"
+            },
+            {
+              "value": "11",
+              "label": "11/12"
+            },
+            {
+              "value": "12",
+              "label": "12/12"
+            }
+          ],
+          "default": "4"
+        }, 
+        {
+          "type": "select",
+          "id": "item_width_tablet",
+          "label": "Item Width Tablet",
+          "options": [
+            {
+              "value": "1",
+              "label": "1/12"
+            },
+            {
+              "value": "2",
+              "label": "2/12"
+            },
+            {
+              "value": "3",
+              "label": "3/12"
+            },
+            {
+              "value": "4",
+              "label": "4/12"
+            },
+            {
+              "value": "5",
+              "label": "5/12"
+            },
+            {
+              "value": "6",
+              "label": "6/12"
+            },
+            {
+              "value": "7",
+              "label": "7/12"
+            },
+            {
+              "value": "8",
+              "label": "8/12"
+            },
+            {
+              "value": "9",
+              "label": "9/12"
+            },
+            {
+              "value": "10",
+              "label": "10/12"
+            },
+            {
+              "value": "11",
+              "label": "11/12"
+            },
+            {
+              "value": "12",
+              "label": "12/12"
+            }
+          ],
+          "default": "6"
+        }, 
+        {
+          "type": "select",
+          "id": "item_width_mobile",
+          "label": "Item Width Mobile",
+          "options": [
+            {
+              "value": "1",
+              "label": "1/12"
+            },
+            {
+              "value": "2",
+              "label": "2/12"
+            },
+            {
+              "value": "3",
+              "label": "3/12"
+            },
+            {
+              "value": "4",
+              "label": "4/12"
+            },
+            {
+              "value": "5",
+              "label": "5/12"
+            },
+            {
+              "value": "6",
+              "label": "6/12"
+            },
+            {
+              "value": "7",
+              "label": "7/12"
+            },
+            {
+              "value": "8",
+              "label": "8/12"
+            },
+            {
+              "value": "9",
+              "label": "9/12"
+            },
+            {
+              "value": "10",
+              "label": "10/12"
+            },
+            {
+              "value": "11",
+              "label": "11/12"
+            },
+            {
+              "value": "12",
+              "label": "12/12"
+            }
+          ],
+          "default": "12"
+        },
+        {
+          "type": "checkbox",
+          "id": "item_hidden_tablet",
+          "label": "Hide on tablet?",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "item_hidden_mobile",
+          "label": "Hide on mobile?",
+          "default": false
+        } 
+      ]
+    },
+	{
+      "type": "banner_panel",
+      "name": "Banner Panel",
+	  "limit": 2,
+      "settings": [ 
+        {
+          "type": "header", 
+          "content": "Column Settings"
+        }, 
+        {
+          "type": "select",
+          "id": "item_width_desktop",
+          "label": "Item Width Desktop",
+          "options": [
+            {
+              "value": "1",
+              "label": "1/12"
+            },
+            {
+              "value": "2",
+              "label": "2/12"
+            },
+            {
+              "value": "3",
+              "label": "3/12"
+            },
+            {
+              "value": "4",
+              "label": "4/12"
+            },
+            {
+              "value": "5",
+              "label": "5/12"
+            },
+            {
+              "value": "6",
+              "label": "6/12"
+            },
+            {
+              "value": "7",
+              "label": "7/12"
+            },
+            {
+              "value": "8",
+              "label": "8/12"
+            },
+            {
+              "value": "9",
+              "label": "9/12"
+            },
+            {
+              "value": "10",
+              "label": "10/12"
+            },
+            {
+              "value": "11",
+              "label": "11/12"
+            },
+            {
+              "value": "12",
+              "label": "12/12"
+            }
+          ],
+          "default": "4"
+        }, 
+        {
+          "type": "select",
+          "id": "item_width_tablet",
+          "label": "Item Width Tablet",
+          "options": [
+            {
+              "value": "1",
+              "label": "1/12"
+            },
+            {
+              "value": "2",
+              "label": "2/12"
+            },
+            {
+              "value": "3",
+              "label": "3/12"
+            },
+            {
+              "value": "4",
+              "label": "4/12"
+            },
+            {
+              "value": "5",
+              "label": "5/12"
+            },
+            {
+              "value": "6",
+              "label": "6/12"
+            },
+            {
+              "value": "7",
+              "label": "7/12"
+            },
+            {
+              "value": "8",
+              "label": "8/12"
+            },
+            {
+              "value": "9",
+              "label": "9/12"
+            },
+            {
+              "value": "10",
+              "label": "10/12"
+            },
+            {
+              "value": "11",
+              "label": "11/12"
+            },
+            {
+              "value": "12",
+              "label": "12/12"
+            }
+          ],
+          "default": "6"
+        }, 
+        {
+          "type": "select",
+          "id": "item_width_mobile",
+          "label": "Item Width Mobile",
+          "options": [
+            {
+              "value": "1",
+              "label": "1/12"
+            },
+            {
+              "value": "2",
+              "label": "2/12"
+            },
+            {
+              "value": "3",
+              "label": "3/12"
+            },
+            {
+              "value": "4",
+              "label": "4/12"
+            },
+            {
+              "value": "5",
+              "label": "5/12"
+            },
+            {
+              "value": "6",
+              "label": "6/12"
+            },
+            {
+              "value": "7",
+              "label": "7/12"
+            },
+            {
+              "value": "8",
+              "label": "8/12"
+            },
+            {
+              "value": "9",
+              "label": "9/12"
+            },
+            {
+              "value": "10",
+              "label": "10/12"
+            },
+            {
+              "value": "11",
+              "label": "11/12"
+            },
+            {
+              "value": "12",
+              "label": "12/12"
+            }
+          ],
+          "default": "12"
+        },
+        {
+          "type": "checkbox",
+          "id": "item_hidden_tablet",
+          "label": "Hide on tablet?",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "item_hidden_mobile",
+          "label": "Hide on mobile?",
+          "default": false
+        },
+        {
+          "type": "header", 
+          "content": "Title Settings"
+        }, 
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Banner Title"
+        },
+        {
+          "type": "select",
+          "id": "title_border_style",
+          "label": "Title Border Style",
+          "options": [
+            {
+              "value": "",
+              "label": "No Border"
+            },
+            {
+              "value": "border-bottom",
+              "label": "Bottom Border"
+            },
+            {
+              "value": "border-middle",
+              "label": "Middle Border"
+            }
+          ],
+          "default": "border-bottom"
+        }, 
+        {
+          "type": "select",
+          "id": "title_align",
+          "label": "Title align",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            } 
+          ],
+          "default": "left"
+        },
+        {
+          "type": "header", 
+          "content": "Banner Settings"
+        }, 
+        {
+          "type": "image_picker",
+          "id": "banner",
+          "label": "Banner image"
+        },
+        {
+          "type": "url",
+          "id": "banner_url",
+          "label": "Link"
+        }
+      ]
+    },
+	{
+      "type": "tab_item",
+      "name": "Tab item for panel",
+      "settings": [ 
+        {
+          "type": "header", 
+          "content": "Column Settings"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "html",
+          "id": "html",
+          "label": "Html Code",
+          "info": "Insert html code or insert shortcode here (Note: insert shortcode > go to page shortcode copy code and insert shortcode)"
+        } 
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Block Html Tab",
+    "category": "Shortcode Section",
+	"blocks": [         
+      {
+        "type": "banner_panel"
+      },
+      {
+        "type": "tab_panel"
+      } 
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

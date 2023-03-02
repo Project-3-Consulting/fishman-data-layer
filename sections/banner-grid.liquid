@@ -1,0 +1,419 @@
+<div data-section-id="{{ section.id }}" data-section-type="image-lazyload-section">
+  <div class="banner-grid" style="margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};background: {{section.settings.section_background_color}};">
+    <div class="container">
+      {% if section.settings.section_title != blank %}
+      <h2 class="title" style="margin-bottom: {{ section.settings.banner_space }};">{{ section.settings.section_title }}</h2>
+      {% endif %}
+      <div class="row {{section.settings.el_class}}" style="margin: 0 -{{section.settings.space_banner}}px;">
+        {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+        {%- if block.settings.banner_image != blank -%}
+          {%- assign banner_image = block.settings.banner_image | img_url: 'master' -%}
+          {%- assign pt = 100 | divided_by: block.settings.banner_image.aspect_ratio | append: '%' -%}
+        {%- else -%}
+          {%- assign banner_image = 'img270x200.png' | asset_url -%}
+          {%- assign pt = 100 | divided_by: 1.35 | append: '%' -%}
+        {%- endif -%}
+        <div class="col-lg-{{block.settings.column_width_desktop}} col-md-{{block.settings.column_width_tablet}} col-sm-{{block.settings.column_width_tablet}} col-xs-{{block.settings.column_width_mobile}}{% if block.settings.column_hidden_tablet != blank %} hidden-md{% endif %}{% if block.settings.column_hidden_mobile != blank %} hidden-xs{% endif%}" style="padding-left:{{section.settings.space_banner}}px;padding-right:{{section.settings.space_banner}}px;">
+          <div class="porto-ibanner {{block.settings.extra_class}}">
+            {% if block.settings.banner_link != blank %}
+            <a href="{{ block.settings.banner_link }}" class="image-link">
+              {%- endif -%}
+              <img data-src="{{ banner_image }}" style="padding-top: {{pt}};" alt="{{block.settings.banner_image.alt}}"/>
+              {% if block.settings.banner_link != blank %}
+            </a>
+            {%- endif -%}
+            {% if block.settings.img_content != blank %}
+            <div class="porto-ibanner-inner"> 
+              {%- if settings.language_enable -%}
+              <div class="lang1"><div class="porto-ibanner-desc{% if block.settings.el_class != '' %} {{block.settings.el_class}}{% endif %}{% if block.settings.content_position != '' %} img-content-{{ block.settings.content_position }}{% endif %}">{{ block.settings.img_content | split: '[lang2]' | first }}</div></div>
+              <div class="lang2"><div class="porto-ibanner-desc{% if block.settings.el_class != '' %} {{block.settings.el_class}}{% endif %}{% if block.settings.content_position != '' %} img-content-{{ block.settings.content_position }}{% endif %}">{{ block.settings.img_content | split: '[lang2]' | last }}</div></div>
+              {%- else -%}
+              <div class="porto-ibanner-desc{% if block.settings.el_class != '' %} {{block.settings.el_class}}{% endif %}{% if block.settings.content_position != '' %} img-content-{{ block.settings.content_position }}{% endif %}">{{ block.settings.img_content | split: '[lang2]' | first }}</div>
+              {%- endif -%}
+            </div>
+            {%- endif -%}
+          </div>
+        </div>
+        {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Banner Grid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+    {
+      "type": "color",
+      "id": "section_background_color",
+      "label": "Section background color",
+      "info": "Set background color for section"
+    },
+    {
+      "type": "text",
+      "id": "el_class",
+      "label": "Extra class name" 
+    },
+    {
+      "type": "header",
+      "content": "Banner Settings"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Banner Title"
+    },
+    {
+      "type": "text",
+      "id": "banner_space",
+      "label": "Space Between title and image",
+      "info": "e.g 30px",
+      "default": "30px"
+    },
+    {
+      "type": "select",
+      "id": "space_banner",
+      "label": "Space between banner",
+      "options": [
+        {
+          "value": "30",
+          "label": "30"
+        },
+        {
+          "value": "25",
+          "label": "25"
+        },
+        {
+          "value": "20",
+          "label": "20"
+        },
+        {
+          "value": "15",
+          "label": "15"
+        },
+        {
+          "value": "10",
+          "label": "10"
+        },
+        {
+          "value": "8",
+          "label": "8"
+        },
+        {
+          "value": "7",
+          "label": "7"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "0",
+          "label": "0"
+        }
+      ],
+      "default": "7"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Banner Image",
+      "settings": [
+		{
+          "type": "header", 
+          "content": "= Column Settings"
+        },   
+        {
+          "type": "text",
+          "id": "extra_class",
+          "label": "___Extra class name"
+        },
+		{
+          "type": "header", 
+          "content": "== Responsive Options"
+        },
+        {
+          "type": "select",
+          "id": "column_width_desktop",
+          "label": "___Column Width Desktop",
+          "options": [
+            {
+              "value": "1",
+              "label": "1/12"
+            },
+            {
+              "value": "2",
+              "label": "2/12"
+            },
+            {
+              "value": "3",
+              "label": "3/12"
+            },
+            {
+              "value": "4",
+              "label": "4/12"
+            },
+            {
+              "value": "5",
+              "label": "5/12"
+            },
+            {
+              "value": "6",
+              "label": "6/12"
+            },
+            {
+              "value": "7",
+              "label": "7/12"
+            },
+            {
+              "value": "8",
+              "label": "8/12"
+            },
+            {
+              "value": "9",
+              "label": "9/12"
+            },
+            {
+              "value": "10",
+              "label": "10/12"
+            },
+            {
+              "value": "11",
+              "label": "11/12"
+            },
+            {
+              "value": "12",
+              "label": "12/12"
+            }
+          ],
+          "default": "4"
+        }, 
+        {
+          "type": "select",
+          "id": "column_width_tablet",
+          "label": "___Column Width Tablet",
+          "options": [
+            {
+              "value": "1",
+              "label": "1/12"
+            },
+            {
+              "value": "2",
+              "label": "2/12"
+            },
+            {
+              "value": "3",
+              "label": "3/12"
+            },
+            {
+              "value": "4",
+              "label": "4/12"
+            },
+            {
+              "value": "5",
+              "label": "5/12"
+            },
+            {
+              "value": "6",
+              "label": "6/12"
+            },
+            {
+              "value": "7",
+              "label": "7/12"
+            },
+            {
+              "value": "8",
+              "label": "8/12"
+            },
+            {
+              "value": "9",
+              "label": "9/12"
+            },
+            {
+              "value": "10",
+              "label": "10/12"
+            },
+            {
+              "value": "11",
+              "label": "11/12"
+            },
+            {
+              "value": "12",
+              "label": "12/12"
+            }
+          ],
+          "default": "6"
+        }, 
+        {
+          "type": "select",
+          "id": "column_width_mobile",
+          "label": "___Column Width Mobile",
+          "options": [
+            {
+              "value": "1",
+              "label": "1/12"
+            },
+            {
+              "value": "2",
+              "label": "2/12"
+            },
+            {
+              "value": "3",
+              "label": "3/12"
+            },
+            {
+              "value": "4",
+              "label": "4/12"
+            },
+            {
+              "value": "5",
+              "label": "5/12"
+            },
+            {
+              "value": "6",
+              "label": "6/12"
+            },
+            {
+              "value": "7",
+              "label": "7/12"
+            },
+            {
+              "value": "8",
+              "label": "8/12"
+            },
+            {
+              "value": "9",
+              "label": "9/12"
+            },
+            {
+              "value": "10",
+              "label": "10/12"
+            },
+            {
+              "value": "11",
+              "label": "11/12"
+            },
+            {
+              "value": "12",
+              "label": "12/12"
+            }
+          ],
+          "default": "12"
+        },
+        {
+          "type": "checkbox",
+          "id": "column_hidden_tablet",
+          "label": "___Hide on tablet?",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "column_hidden_mobile",
+          "label": "___Hide on mobile?",
+          "default": false
+        },
+		{
+          "type": "header", 
+          "content": "== Banner Settings"
+        },
+        {
+          "type": "image_picker",
+          "id": "banner_image",
+          "label": "Home Banner Image"
+        },
+        {
+          "type": "url",
+          "id": "banner_link",
+          "label": "___Banner link"
+        },
+        {
+          "type": "html",
+          "id": "img_content",
+          "label": "___Banner Content"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "___Content Position",
+          "options": [
+            {
+              "value": "",
+              "label": "Custom"
+            },
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "el_class",
+          "label": "___Extra class name" 
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Banner Grid",
+    "category": "Banner",
+    "settings": {
+
+    },
+    "blocks": [
+      {
+        "type": "image"
+      },
+      {
+        "type": "image"
+      },
+      {
+        "type": "image"
+      },
+      {
+        "type": "image"
+      }
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

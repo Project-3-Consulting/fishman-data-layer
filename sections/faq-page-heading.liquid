@@ -1,0 +1,77 @@
+<div class="breadcrumbs-wrap text-center">
+  <ul class="breadcrumb">
+    <li class="home">
+      <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}" {% if settings.language_enable %}data-translate="general.breadcrumbs.home"{% endif %}>{{ 'general.breadcrumbs.home' | t }}</a>
+      <i class="icon-angle-right"></i>
+    </li>
+    <li> 
+      <span class="breadcrumbs-split"><i class="icon-angle-right"></i></span>
+      <span>
+        {% if settings.language_enable %}
+        <span class="lang1">{{ page.title | split: '|' | first  }}</span>
+        <span class="lang2">{{ page.title | split: '|' | last }}</span>
+        {% else %}
+        {{ page.title | split: '|' | first }}
+        {% endif %}
+      </span>
+    </li>
+  </ul>
+</div>
+<div class="text-center">
+  <h1 class="page-title"> 
+    {% if settings.language_enable %}
+    <span class="lang1">{{ section.settings.title | split: '|' | first }}</span>
+    <span class="lang2">{{ section.settings.title | split: '|' | last }}</span>
+    {% else %}
+    {{ section.settings.title | split: '|' | first }}
+    {% endif %}
+  </h1>
+</div>  
+<style>
+  {% if section.settings.faq_heading_image != blank %}
+  .main-container .page-top{ 
+    background-image:url({{section.settings.faq_heading_image | img_url: 'master'}});
+    background-position:center;
+    background-repeat:no-repeat;background-size:cover;
+  }
+  {% endif %}
+  .main-container .page-top .breadcrumbs-wrap a {
+    color: {{section.settings.link-color}};
+  }
+  .main-container .page-top .breadcrumbs-wrap,.main-container .page-top .page-title {
+    color: {{section.settings.text-color}};
+  }
+</style>  
+{% schema %}
+  {
+    "name": "Faqs Page Heading",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Page Heading"
+      },
+      {
+        "type": "image_picker",
+        "id": "faq_heading_image",
+        "label": "Page Heading Image",
+        "info": "1920x700 (Width x Height)."
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Questions & Answers"
+      },
+      {
+        "type": "color",
+        "id": "link-color",
+        "label": "Link color" 
+      },
+      {
+        "type": "color",
+        "id": "text-color",
+        "label": "Text color" 
+      }
+	]
+  }
+{% endschema %}

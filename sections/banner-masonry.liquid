@@ -1,0 +1,256 @@
+<div data-section-id="{{ section.id }}" data-section-type="banner-masonry-section">
+  <div id="banner-masonry-{{ section.id }}" style="margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};">
+    {%- if section.settings.section_layout == '0' -%}
+    <div class="container">
+      {%- endif-%}
+      <div class="banner-masonry-grid" style="margin: -{{section.settings.item_space | remove: 'px' | append: 'px' }};">
+        <div class="grid-sizer"></div>
+        {%- for block in section.blocks -%}
+        <div class="masonry-grid-item {% if block.settings.masonry_grid_item == 'w2' %}w2{% endif %}{% if block.settings.masonry_grid_item == 'w3' %}w3{% endif %}{% if block.settings.masonry_grid_item == 'w4' %}w4{% endif %}" style="padding:{{section.settings.item_space | remove: 'px' | append: 'px' }};{% if block.settings.fixed_height != '' %}height: {{block.settings.fixed_height  | remove: 'px' | append: 'px'}};{% endif %}{% if block.settings.fixed_width != '' %}width: {{block.settings.fixed_width}};{% endif %}">
+          {%- if block.settings.home_banner_image != blank -%}
+          {%- assign baner_url = block.settings.home_banner_image | img_url: 'master' -%}
+          {%- else -%}
+          {%- if block.settings.masonry_grid_item == 'w1' -%}
+          {%- assign baner_url = 'baner468x589.png' | asset_url -%}
+          {%- endif -%}
+          {%- if block.settings.masonry_grid_item == 'w2' -%}
+          {%- assign baner_url = 'baner943x589.png' | asset_url -%}
+          {%- endif -%}
+          {%- if block.settings.masonry_grid_item == 'w3' -%}
+          {%- assign baner_url = 'baner1417x243.png' | asset_url -%}
+          {%- endif -%}
+          {%- if block.settings.masonry_grid_item == 'w4' -%}
+          {%- assign baner_url = 'baner1891x401.png' | asset_url -%}
+          {%- endif -%}
+          {%- if block.settings.masonry_grid_item == 'w5' -%}
+          {%- assign baner_url = 'baner468x838.png' | asset_url -%}
+          {%- endif -%}
+          {%- if block.settings.masonry_grid_item == 'w6' -%}
+          {%- assign baner_url = 'baner468x242.png' | asset_url -%}
+          {%- endif -%}
+          {%- endif -%}
+          <div class="banner-wrap {{block.settings.extra_class}}" style="position: relative;">
+            <img src="{{ baner_url }}" alt="{{block.settings.home_banner_image.alt}}"/>
+            {%- if block.settings.content != '' -%}
+            <div class="banner-content" style="position: absolute;width:100%;height:100%;top:0;">
+              {%- if settings.language_enable -%}
+              <div class="lang1">{{ block.settings.content | split: '[lang2]' | first }}</div>
+              <div class="lang2">{{ block.settings.content | split: '[lang2]' | last }}</div>
+              {%- else -%}
+              {{ block.settings.content | split: '[lang2]' | first }}
+              {%- endif -%}
+            </div>
+            {%- endif -%} 
+          </div>
+        </div>
+        {%- endfor -%}
+      </div>
+      {%- if section.settings.section_layout == '0' -%}
+    </div>
+    {%- endif-%}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Banner Masonry Grid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+	{
+      "type": "select",
+      "id": "section_layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "0",
+          "label": "Default"
+        },
+        {
+          "value": "1",
+          "label": "Fullwidth"
+        } 
+      ],
+      "default": "0"
+    },
+    {
+      "type": "text",
+      "id": "item_space",
+      "label": "Item banner space",
+      "info": "Set item with space (ex: 10px)",
+      "default": "10px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image Banner",
+      "settings": [
+        {
+          "type": "select",
+          "id": "masonry_grid_item",
+          "label": "Masonry Grid Item",
+          "options": [
+            {
+              "value": " ",
+              "label": " "
+            },
+            {
+              "value": "w1",
+              "label": "w1"
+            },
+            {
+              "value": "w2",
+              "label": "w2"
+            },
+            {
+              "value": "w3",
+              "label": "w3"
+            },
+            {
+              "value": "w4",
+              "label": "w4"
+            },
+            {
+              "value": "w5",
+              "label": "w5"
+            },
+            {
+              "value": "w6",
+              "label": "w6"
+            }
+          ],
+          "default": " "
+        },
+        {
+          "type": "text",
+          "id": "fixed_height",
+          "label": "Custom Height",
+          "info": "Set custom item height: ex(400px)"
+        },
+        {
+          "type": "text",
+          "id": "fixed_width",
+          "label": "Custom Width",
+          "info": "Set custom item width: ex(50% or 500px)"
+        },
+        {
+          "type": "image_picker",
+          "id": "home_banner_image",
+          "label": "Home Banner Image"
+        },
+        {
+          "type": "html",
+          "id": "content",
+          "label": "Content" 
+        },
+        {
+          "type": "text",
+          "id": "extra_class",
+          "label": "Extra Class",
+          "info": "Set custom class item"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Banner Masonry Grid",
+    "category": "Banner",
+    "settings": {
+    },
+    "blocks": [
+      {
+        "type": "image",
+      "settings": {
+          "masonry_grid_item": "w2"
+        }
+      },
+      {
+        "type": "image",
+        "settings": {
+          "masonry_grid_item": "w1"
+        }
+      },
+      {
+        "type": "image",
+        "settings": {
+          "masonry_grid_item": "w5"
+        }
+      },
+      {
+        "type": "image",
+        "settings": {
+          "masonry_grid_item": "w3"
+        }
+      },
+      {
+        "type": "image",
+        "settings": {
+          "masonry_grid_item": "w4"
+        }
+      },
+      {
+        "type": "image",
+        "settings": {
+          "masonry_grid_item": "w5"
+        }
+      },
+      {
+        "type": "image",
+        "settings": {
+          "masonry_grid_item": "w1"
+        }
+      },
+      {
+        "type": "image",
+        "settings": {
+          "masonry_grid_item": "w2"
+        }
+      },
+      {
+        "type": "image",
+        "settings": {
+          "masonry_grid_item": "w6"
+        }
+      },
+      {
+        "type": "image",
+        "settings": {
+          "masonry_grid_item": "w6"
+        }
+      },
+      {
+        "type": "image",
+        "settings": {
+          "masonry_grid_item": "w6"
+        }
+      }
+    ]
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

@@ -1,0 +1,212 @@
+{%- if section.settings.enable != blank -%}
+<div class="porto-sticky-navbar has-ccols ccols-5">
+  {%- if section.blocks.size > 0 -%}
+  {%- for block in section.blocks -%}
+  {%- case block.type -%}
+  {%- when 'menu_wishlist' -%}
+  <div class="sticky-icon">
+    <a class="wishlist-popup" href="javascript:;">
+      <i class="icon-wishlist-2"></i> 
+      <span class="label">
+        {%- if settings.language_enable -%}
+        <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+        <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+        {%- else -%}
+        {{ block.settings.title | split: '|' | first }}
+        {%- endif -%}
+      </span> 
+    </a>
+  </div>
+  {%- when 'menu_account' -%}
+  <div class="sticky-icon"> 
+    {%- if customer -%} 
+    <a href="/account/logout"> 
+      <i class="icon-wishlist-2"></i> 
+      <span class="label" {% if settings.language_enable %}data-translate="header.settings.logout"{% endif %}>{{ 'header.settings.logout' | t }}</span> 
+    </a>
+    {%- else -%}
+    <a href="/account/login">
+      <i class="icon-user-2"></i>
+      <span class="label">
+        {%- if settings.language_enable -%}
+        <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+        <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+        {%- else -%}
+        {{ block.settings.title | split: '|' | first }}
+        {%- endif -%}
+      </span>
+    </a>
+    {%- endif -%}
+  </div>
+  {%- when 'menu_item' -%}
+  {%- if block.settings.button_link != blank and block.settings.title != blank -%} 
+  <div class="sticky-icon"> 
+    <a href="{{block.settings.button_link}}"> 
+      {% if block.settings.icon != '' %}
+      <i class="{{ block.settings.icon }}"></i> 
+      {% endif %}
+      <span class="label">
+        {%- if settings.language_enable -%}
+        <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+        <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+        {%- else -%}
+        {{ block.settings.title | split: '|' | first }}
+        {%- endif -%}
+      </span> 
+    </a>
+  </div>  
+  {% endif %}
+  {%- when 'menu_cart' -%}
+  <div class="sticky-icon link-cart"> 
+    <a href="/cart/"> 
+      {% if block.settings.icon != '' %}
+      <span class="cart-icon"> 
+        <i class="{{ block.settings.icon }}"></i> 
+        <span class="cart-items">{{ cart.item_count }}</span> 
+      </span> 
+      {% endif %}
+      <span class="label">
+        {%- if settings.language_enable -%}
+        <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+        <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+        {%- else -%}
+        {{ block.settings.title | split: '|' | first }}
+        {%- endif -%}
+      </span> 
+    </a>
+  </div>
+  {%- endcase -%}
+  {%- endfor -%}
+  {%- endif -%}
+  <script type="text/javascript">
+    jQuery(function($) {
+      if($('.header-container .header').length>0){
+        var $header_main = $('.header-container .header'); 
+      }
+      if($('.header-container .header-middle').length>0){
+        var $header_main = $('.header-container .header-middle'); 
+      }
+      if( $('.porto-sticky-navbar').length > 0 ) { 
+        window.addEventListener('scroll', function() {
+          if( window.innerWidth < 768 ) {
+            $('.box_footer').css('padding-bottom', $('.porto-sticky-navbar').height());
+            $('#back-top a .sticker-wrapper .sticker').css('bottom', $('.porto-sticky-navbar').height());
+            var headerOffset = -1;
+            var scrollTop = $(window).scrollTop();
+            headerOffset = Math.max( $header_main.scrollTop() + $header_main.height());
+            if( headerOffset <= 0 ) {
+              if( $('.header-container').length > 0 && $('.header-container').height() > 10 ) headerOffset = $('.header-container').scrollTop() + $('.header-container').height();
+              else headerOffset = 100;
+            }
+            if( headerOffset <= scrollTop ) {
+              $('.porto-sticky-navbar').addClass('fixed');
+            } else {
+              $('.porto-sticky-navbar').removeClass('fixed');
+            }
+          }
+        }, {passive: true});
+        $(window).on('resize', function() { 
+          if( window.innerWidth > 767 ) {
+            $('.box_footer').css('padding-bottom', '');
+            $('#back-top a .sticker-wrapper .sticker').css('bottom', '');
+          }
+        });
+      } 
+    });
+  </script>
+</div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Sticky Footer Navbar",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Show Navbar?",
+      "default": false,
+	  "info": "Only show in mobile."
+    }
+  ],
+  "blocks": [
+     {
+      "type": "menu_wishlist",
+      "name": "Link Wishlist",
+      "limit": 1,
+        "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "My Wishlist"
+        }
+      ]
+    },
+    {
+      "type": "menu_account",
+      "name": "Link Account",
+      "limit": 1,
+        "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Account"
+        }
+      ]
+    },
+    {
+      "type": "menu_cart",
+      "name": "Show Minicart",
+      "limit": 1,
+        "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title Cart",
+          "default": "Cart"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon Class",
+          "default": "icon-shopping-cart"
+        }
+      ]
+    },
+    {
+      "type":"menu_item",
+      "name":"Add Items",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Link Title",
+          "default": "Home"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon Class",
+          "default": "icon-category-home"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Navigation link"
+        }
+      ]
+    }
+  ] 
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

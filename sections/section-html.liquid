@@ -1,0 +1,49 @@
+<div class="html-code" data-section-id="{{ section.id }}" data-section-type="html-section">
+  <div class="html-code-wrapper"> 
+    {%- if settings.language_enable -%}
+      <div class="lang1">
+        {%- assign content_lg1 = section.settings.html | split: '[lang2]' | first -%}
+        {% include 'shortcode' load: content_lg1 %}
+      </div>
+      <div class="lang2">
+        {%- assign content_lg2 = section.settings.html | split: '[lang2]' | last -%}
+        {% include 'shortcode' load: content_lg2 %} 
+      </div>
+      {%- else -%}
+      {%- assign content_lg = section.settings.html | split: '[lang2]' | first -%}
+        {% include 'shortcode' load: content_lg %}
+      {%- endif -%} 
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Block Html", 
+  "settings": [
+    {
+      "type": "header",
+      "content": "Custom Html"
+    }, 
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    }, 
+    {
+      "type": "html",
+      "id": "html",
+      "label": "Html Code",
+	  "info": "Insert html code or insert shortcode here (Note: insert shortcode > go to page shortcode copy code and insert shortcode)"
+    } 
+  ], 
+  "presets": [{
+    "name": "Block Html",
+    "category": "Shortcode Section" 
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

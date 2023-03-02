@@ -1,0 +1,10 @@
+{% render 'shogun-products', content: collection %}
+{{collection.metafields.shogun.above}}
+{%- assign limit = collection.all_products_count -%}
+{%- assign columns = settings.collection_columns | plus: 0 -%}
+{%- assign sidebar-left = settings.sidebar_left_collection -%}
+{%- assign sidebar-right = settings.sidebar_right_collection -%}
+{%- include 'collection_grid' -%}
+
+{{collection.metafields.shogun.below}}
+

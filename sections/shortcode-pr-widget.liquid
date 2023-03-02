@@ -1,0 +1,329 @@
+<div data-section-id="{{ section.id }}" data-section-type="widget-products-section">
+  <div class="widget_list_{{section.id}}"> 
+    <div class="products-collection widget-products porto-products title-{{section.settings.title_border_style}}">
+      <h3>Code:</h3>
+      <code>
+        <!-- Shortcode product --> 
+        [product-widget title="{{section.settings.title}}" title_align="{{section.settings.title_align}}" title_style="{{section.settings.title_border_style}}" limit="{{section.settings.limit}}" item_show="{{section.settings.item_show}}" view_mode="{{section.settings.view_mode}}" autoplay="{{ section.settings.autoplay }}" arrows="{{section.settings.show_nav}}" arrows_side="{{section.settings.nav_side}}" arrows_type="{{section.settings.nav_type}}" arrows_onhover="{{section.settings.show_nav_hover}}" positionArr="{{section.settings.nav_position}}" dots="{{section.settings.show_paging}}" positionPag="{{section.settings.page_position}}" handle_collection="{{section.settings.collection}}" ] 
+        <!-- / Shortcode product -->
+      </code>
+      <style>
+        code {
+          background-color: #d1d1d1;
+          padding: 3px 2px;
+          color: #777;
+          font-size: 14px;
+          line-height: 24px;
+        }
+        .products-collection > h3,.products-collection code {text-align: center;}
+      </style> 
+      {%- if section.settings.title != '' -%}
+      <h2 class="section-title text-{{section.settings.title_align}}" style="max-width: 30%;">
+        {%- if section.settings.title_border_style == 'border-middle' and section.settings.title_align != 'left' -%}
+        <span class="line-l"></span>
+        {%- endif -%}
+        <span class="inline-title">
+          {%- if settings.language_enable -%}
+          <span class="lang1">{{ section.settings.title | split: '|' | first }}</span>
+          <span class="lang2">{{ section.settings.title | split: '|' | last }}</span>
+          {%- else -%}
+          {{ section.settings.title | split: '|' | first }}
+          {%- endif -%}
+        </span>
+        {%- if section.settings.title_border_style == 'border-middle' and section.settings.title_align != 'right' -%}
+        <span class="line-r"></span>
+        {%- endif -%}
+      </h2>
+      {%- endif -%} 
+      {%- assign view_mode = section.settings.view_mode -%} 
+      <div class="widget" style="max-width: 30%;">
+        {%- if view_mode == 'products-slider' -%}
+        <div class="data-carousel"
+             data-auto="{{ section.settings.autoplay }}"
+             data-items="{{ section.settings.columns }}"
+             data-1200="{{ section.settings.columns }}"
+             data-992="4"
+             data-768="3"
+             data-640="2"
+             data-480="2"
+             data-320="2"
+             data-nav="{{ section.settings.show_nav }}" 
+             data-paging="{{ section.settings.show_paging }}"
+             data-margin='0' style="display: none;"></div>
+        {%- endif -%}
+        {%- assign name_collection = section.settings.collection -%}
+        {%- if name_collection == blank -%}{%- assign name_collection = "all" -%}{%- endif -%}
+        {%- assign collection = collections[name_collection] -%}
+        {%- assign limit = section.settings.limit | default: '3' -%}
+        {%- if collection.products.size == 0 -%}
+        <p style="text-align:center;color:#999;padding: 5px 10px;font-style:italic;" {% if settings.language_enable %}data-translate="products.general.no_more_product"{% endif %}>{{ 'products.general.no_more_product' | t }}</p>
+        {%- else -%}
+        <ul class="product_list_widget{% if view_mode == 'products-slider' %} owl-carousel carousel-init owl-carousel-lazy {{section.settings.nav_position}}{% if section.settings.nav_position != 'show-nav-title' %} {{section.settings.nav_side}} {{section.settings.nav_type}}{% endif %} {{section.settings.page_position}} {% if section.settings.show_nav_hover %}show-nav-hover{% endif %}{% endif %}">
+          {%- for product in collection.products limit: limit -%}
+          {%- assign on_sale = false -%}
+          {%- if product.compare_at_price_min > product.price_min -%}
+          {%- assign on_sale = true -%}
+          {%- endif %}
+          {%- assign imgsrc = 'img600x600.png' | asset_img_url: '150x' -%}
+          {%- assign pt = '100%' -%}
+          {%- if product.featured_image -%}
+          {%- assign pt = 100 | divided_by: product.featured_image.aspect_ratio | append: '%' -%}
+          {%- assign imgsrc = product.featured_image.src | img_url: '150x150' -%}
+          {%- endif %}
+          {%- assign row = forloop.index | modulo:section.settings.item_show -%}
+          {%- if view_mode == 'products-slider' -%}
+          {%- if row == 1 -%}<div class="item-wrap">{%- endif -%} 
+          {%- endif -%}
+          <li>
+            <a class="product-image" href="{{ product.url | within: collection }}">
+              <div class="inner">
+                <img data-src="{{ imgsrc }}" alt="{{ product.featured_image.alt | escape }}" class="img-responsive main lazyload" style="padding-top: {{pt}};"/>
+              </div> 
+            </a>
+            <div class="product-details">  
+              <a href="{{ product.url | within: collection }}" title="{{ product.title }}">
+                <span class="product-title">
+                  {% if settings.language_enable %}
+                  <span class="lang1">{{ product.title | split: '|' | first }}</span>
+                  <span class="lang2">{{ product.title | split: '|' | last }}</span>
+                  {% else %}
+                  {{ product.title | split: '|' | first }}
+                  {% endif %}
+                </span>
+              </a>
+              <div class="star-rating">
+                <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+              </div>  
+              {%- if on_sale -%} 
+              <del><span class="shopify-Price-amount amount"><span class="money">{{ product.compare_at_price | money }}</span></span></del> 
+              <ins><span class="shopify-Price-amount amount"><span class="money">{{ product.price | money }}</span></span></ins>
+              {%- else -%}
+              <span class="shopify-Price-amount amount"><span class="money">{{ product.price | money }}</span></span>
+              {%- endif -%}  
+            </div>
+          </li>
+          {%- if view_mode == 'products-slider' -%}
+          {%- if row == 0 or forloop.last -%}</div>{%- endif -%} 
+          {%- endif -%}
+          {%- endfor-%}
+        </ul>
+        {%- endif -%}
+      </div>
+    </div> 
+  </div>
+</div> 
+{% schema %}
+{
+  "name": "Products Widget",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Config"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Shortcode Title"
+    },
+    {
+      "type": "select",
+      "id": "title_border_style",
+      "label": "Title Border Style",
+      "options": [
+        {
+          "value": "",
+          "label": "No Border"
+        },
+        {
+          "value": "border-bottom",
+          "label": "Bottom Border"
+        },
+        {
+          "value": "border-middle",
+          "label": "Middle Border"
+        }
+      ],
+      "default": "border-bottom"
+    }, 
+    {
+      "type": "select",
+      "id": "title_align",
+      "label": "Title align",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        } 
+      ],
+      "default": "left"
+    }, 
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "limit",
+      "label": "Number of products to show",
+      "default": "3"
+    }, 
+    {
+      "type": "text",
+      "id": "item_show",
+      "label": "Number item show on list for product slider",
+      "default": "3"
+    },
+    {
+      "type": "header",
+      "content": "Design Config"
+    },
+    {
+      "type": "select",
+      "id": "view_mode",
+      "label": "Product View Mode",
+      "options": [ 
+        {
+          "value": "list",
+          "label": "List"
+        },
+        {
+          "value": "products-slider",
+          "label": "Slider"
+        }
+      ],
+      "default": "list"
+    }, 
+    {
+      "type": "header",
+      "content": "Products Slider Config"
+    }, 
+    {
+      "type": "text",
+      "id": "autoplay",
+      "label": "Slideshow",
+      "info": "Change to any integrer for example 5000 to play every 5 seconds. Leave empty to disable autoplay.",
+      "default": "5000"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav",
+      "label": "Show Navigation",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "nav_position",
+      "label": "Navigation Position",
+      "options": [
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "nav-center-images-only",
+          "label": "Middle of Images"
+        },
+        {
+          "value": "show-nav-title",
+          "label": "Top"
+        },
+        {
+          "value": "nav-bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "middle"
+    },
+    {
+      "type": "select",
+      "id": "nav_side",
+      "label": "Nav inside/outside",
+      "options": [
+        {
+          "value": "",
+          "label": "Default"
+        },
+        {
+          "value": "nav-pos-inside",
+          "label": "Inside"
+        },
+        {
+          "value": "nav-pos-outside",
+          "label": "Outside"
+        } 
+      ] 
+    },
+    {
+      "type": "select",
+      "id": "nav_type",
+      "label": "Nav Type",
+      "options": [
+        {
+          "value": "",
+          "label": "Default"
+        },
+        {
+          "value": "rounded-nav",
+          "label": "Rounded"
+        },
+        {
+          "value": "big-nav",
+          "label": "Big & Full Width"
+        },
+        {
+          "value": "nav-style-1",
+          "label": "Simple Arrow 1"
+        },
+        {
+          "value": "nav-style-2",
+          "label": "Simple Arrow 2"
+        },
+        {
+          "value": "nav-style-4",
+          "label": "Simple Arrow 3"
+        },
+        {
+          "value": "nav-style-3",
+          "label": "Square Grey Arrow"
+        } 
+      ],
+      "default": "nav-style-4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav_hover",
+      "label": "Show nav on hover"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_paging",
+      "label": "Show Paging"
+    },
+    {
+      "type": "select",
+      "id": "page_position",
+      "label": "Paging Position",
+      "options": [ 
+        {
+          "value": "",
+          "label": "Bottom"
+        },
+        {
+          "value": "show-dots-title-right",
+          "label": "Top right"
+        }
+      ] 
+    }
+  ] 
+}
+{% endschema %}
