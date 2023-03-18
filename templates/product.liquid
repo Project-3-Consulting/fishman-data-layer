@@ -223,10 +223,19 @@
     </div>
     <div class="add-to-cart-clone">
       {% if product.available %}
-      <button type="button" id="product-addtocart-button-clone">
-        <i class="icon-cart"></i>
-        <span>{{ 'products.product.add_to_cart' | t }}</span>
-      </button>
+        <button type="button" id="product-addtocart-button-clone" onclick="gtag('event', 'add_to_cart', {
+            'currency': {{ shop.currency | json }},
+            'value': {{ product.price | money_without_currency }},
+            'items': [{
+              'item_name': '{{ product.title }}',
+              'item_id': '{{ product.id }}',
+              'quantity': {{ item.quantity }},
+              'price': {{ product.price | money_without_currency }},
+              'currency': '{{ shop.currency }}'
+            }] });">
+          <i class="icon-cart"></i>
+          <span>{{ 'products.product.add_to_cart' | t }}</span>
+        </button>
       {% else %}
       <button type="button" id="product-addtocart-button-clone">
         <i class="icon-cart"></i>
