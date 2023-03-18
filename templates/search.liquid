@@ -1,0 +1,172 @@
+<!-- /templates/search.liquid -->
+{%- if settings.sidebar_move == blank -%}
+{% include 'breadcrumb' %}
+{%- endif -%}
+{%- if canonical_url contains 'collections/all' -%}
+  {%- assign by_collection = false -%}
+{%- else -%}
+  {%- assign by_collection = true -%}
+{%- endif -%} 
+<div id="collection-main">
+  <div class="container">
+    <div class="main-search-container">
+      <div class="row">
+        {%- assign sidebar_class = 'col-lg-3' -%}
+        {%- if settings.sidebar_left_collection != blank -%}
+        {%- assign main_class = 'col-lg-9' -%}
+        {%- endif -%} 
+        {%- if settings.sidebar_right_collection != blank -%}
+        {%- assign main_class = 'col-lg-9' -%} 
+        {%- endif -%}
+        {%- if settings.sidebar_left_collection != blank and settings.sidebar_right_collection != blank -%}
+        {%- assign main_class = 'col-lg-6' -%} 
+        {%- endif -%}   
+        {%- if settings.sidebar_left_collection == blank and settings.sidebar_right_collection == blank -%}
+        {%- assign main_class = 'col-lg-12' -%} 
+        {%- endif -%}   
+        <div class="{{main_class}} main-content collection-content" style="order:2;">
+          <div class="search-form">
+            {% if search.performed %}
+              {% if search.results_count == 0 %}
+              <h3 {% if settings.language_enable %}data-translate="general.search.no_results_html|terms:{{search.terms}}"{% endif %}>{{ 'general.search.no_results_html' | t: terms: search.terms }}</h3>
+              {% else %}
+              <h3 {% if settings.language_enable %}data-translate="general.search.results_for_html|terms:{{search.terms}}"{% endif %}>{{ 'general.search.results_for_html' | t: terms: search.terms }}</h3>
+              {% endif %}
+            {% else %}
+              <h3 {% if settings.language_enable %}data-translate="general.search.title"{% endif %}>{{ 'general.search.title' | t }}</h3>
+            {% endif %}
+            {% if paginate.pages > 1 %}
+            <div class="pagenav-wrap">
+              <div class="pagination">
+                {% include 'pagination-page' %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          {%- if search.performed -%}
+            {%- assign view_mode = settings.collection_view_mode -%} 
+            {%- assign view_mode_class = view_mode -%}
+            {%- case settings.collection_view_mode -%}
+              {%- when 'divider' -%} 
+                {%- assign view_mode_class = 'grid divider-line' -%}  
+            {%- when 'list' -%} 
+                {%- assign view_mode_class = 'grid' -%} 
+            {%- endcase -%} 
+
+            {%- assign layout_class = 'product-' | append:settings.product_layout  -%}
+            {%- assign pt_layout = settings.product_layout  -%}
+            {%- case settings.product_layout -%}
+            {%- when 'onhover' -%}
+            {%- assign layout_class = 'product-default show-links-hover' -%} 
+            {%- when 'outimage_aq_onimage' -%}
+            {%- assign layout_class = 'product-outimage_aq_onimage' -%} 
+            {%- when 'outimage_aq_onimage2' -%}
+            {%- assign layout_class = 'product-outimage_aq_onimage with-padding' -%}  
+            {%- when 'quantity' -%}
+            {%- assign layout_class = 'product-wq_onimage' -%} 
+            {%- endcase -%} 
+            {%- if view_mode == 'list' -%}
+            {%- assign layout_class = 'product-default' -%} 
+            {%- endif -%} 
+            {%- case settings.collection_aspect_ratio -%}
+            {%- when '1' -%}
+              {%- assign image_width = settings.collection_ratio_width -%}
+              {%- assign image_height = '' -%}
+              {%- assign ar = 1 -%}
+            {%- else -%}
+              {%- assign image_width = settings.collection_ratio_width -%}
+              {%- assign image_height = settings.collection_ratio_height -%}
+              {%- if image_width < image_height -%}
+                {%- assign ar =image_width | divided_by: 1 -%}
+              {%- else -%}
+                {%- assign ar = image_width | divided_by: image_height -%}
+              {%- endif -%}
+            {%- endcase -%}
+            {%- capture image_size -%}{{ image_width }}x{{ image_height }}{%- endcapture -%}
+            {%- assign pt = 100 | divided_by: ar | append: '%' -%}
+            {%- assign columns = settings.collection_columns | plus: 0 -%}
+            {%- if columns >= 4 -%}
+              {%- capture class_grid %}item-1200-{{ columns }} item-992-4 item-768-3 item-640-2 item-320-1{%- endcapture -%}
+            {%- endif -%}
+              {%- if columns == 3 -%}
+            {%- capture class_grid %}item-1200-{{ columns }} item-640-2 item-320-1{%- endcapture -%} 
+            {%- endif -%}
+            {%- if columns <= 2 -%}
+              {%- capture class_grid %}item-1200-{{ columns }}{%- endcapture -%}  
+            {%- endif -%}
+            
+            {%- if canonical_url contains 'collections' and by_collection -%}
+              {%- if search.terms != blank and search.performed == true -%}
+                {%- assign product_search_handle = '' -%}
+                {%- assign collection_search = canonical_url | split:'/collections/' | last | split:'?q=' | first -%}
+                {%- paginate search.results by search.results_count -%}
+                  {%- for item in search.results -%}
+                    {%- for collection in item.collections -%}
+                      {%- if collection.handle == collection_search -%}
+                        {%- assign product_search_handle = product_search_handle | append:item.handle | append:',' -%}
+                        {%- break -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- endfor -%}
+                  <div class="category-products products {{view_mode_class}} {% if view_mode != 'divider' %}products-spacing-{{settings.space_product}}{% endif %}{% if view_mode == 'grid' or view_mode == 'divider' %} {{class_grid}}{% endif %}">
+                    <div id="products-grid" class="products-grid columns{{columns}}"> 
+                      {%- assign arr_product_search_handle = product_search_handle | split:',' -%}
+                      {%- if arr_product_search_handle.size == 0 -%}
+                        <p class="no-found-msg" {% if settings.language_enable %}data-translate="general.search.not_found"{% endif %}>{{ 'general.search.not_found' | t }}</p>
+                      {%- else -%} 
+                        {%- for item in search.results -%}
+                          {%- assign product = item -%} 
+                          {%- for collection in product.collections -%}
+                            {%- if collection.handle == collection_search -%}
+                              {%- assign product_search_handle = product_search_handle | append:product.handle | append:',' -%} 
+                              {%- include 'pt-product-loop' -%} 
+                            {%- endif -%}
+                          {%- endfor -%}
+                        {%- endfor -%}  
+                      {%- endif -%}
+                    </div>
+                  </div> 
+                {%- endpaginate -%}
+              {%- endif -%}
+            {%- else -%}  
+          	  {%- assign limit = settings.collection_products_count -%}
+              {%- paginate search.results by limit -%}
+              <div class="category-products products {{view_mode_class}} {% if view_mode != 'divider' %}products-spacing-{{settings.space_product}}{% endif %}{% if view_mode == 'grid' or view_mode == 'divider' %} {{class_grid}}{% endif %}">
+                <div id="products-grid" class="products-grid columns{{columns}}"> 
+                  {%- if search.terms != blank -%}
+                    {%- if search.results_count == 0 or search.performed == false -%}
+                      <p class="no-found-msg" {% if settings.language_enable %}data-translate="general.search.not_found"{% endif %}>{{ 'general.search.not_found' | t }}</p>
+                    {%- else -%}
+                      {%- for item in search.results -%}
+                        {%- assign product = item -%}  
+                        {%- include 'pt-product-loop' -%} 
+                      {%- endfor -%}
+                    {%- endif -%}
+                  {%- endif -%}  
+                </div>
+              </div>
+              {%- if paginate.pages > 1 -%}
+              <div class="pagenav-wrap">
+                <div class="pagination">
+                  {%- include 'pagination-page' -%}
+                </div>
+              </div>
+              {%- endif -%} 
+              {%- endpaginate -%}
+            {%- endif -%}  
+          {%- endif -%} 
+        </div>
+        {% if settings.sidebar_left_collection != blank %}
+        <div class="{{sidebar_class}} sidebar col-left">
+          {% section 'sidebar-left' %}
+        </div>
+        {% endif %}
+        {% if settings.sidebar_right_collection != blank %}
+        <div class="{{sidebar_class}} sidebar-right col-right">
+          {% section 'sidebar-right' %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

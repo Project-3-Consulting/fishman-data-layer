@@ -1,0 +1,67 @@
+{%- if settings.header_topbar_disable == blank -%}
+
+<div class="top-links-container topbar-text-{{settings.topbar_text_color}}">
+  <div class="container">
+    <div class="top-links-inner">
+      {%- if settings.topbar_custom_text2 != '' -%}
+      <div class="custom-text"> 
+        {% if settings.language_enable %}
+        <span class="lang1">{{ settings.topbar_custom_text2 | split: '[lang2]' | first }}</span>
+        <span class="lang2">{{ settings.topbar_custom_text2 | split: '[lang2]' | last }}</span>
+        {% else %}
+        {{ settings.topbar_custom_text2 | split: '[lang2]' | first }}
+        {% endif %}
+      </div>
+      {% endif %}
+      <div class="top-links-area show-icon-tablet">
+        <div class="top-links-icon">
+          <a href="javascript:;" {% if settings.language_enable %}data-translate="header.settings.links"{% endif %}>{{ 'header.settings.links' | t }}</a>
+        </div>
+        {% section 'header-toplink-menu' %}
+      </div> 
+      <div class="separator"></div>
+      {% include 'header-setting' %}
+      {%- if settings.topbar_custom_text != '' -%}
+      <div class="separator"></div>
+      <div class="topbar-custom-text">
+        {% if settings.language_enable %}
+        <div class="lang1">{{ settings.topbar_custom_text | split: '[lang2]' | first }}</div>
+        <div class="lang2">{{ settings.topbar_custom_text | split: '[lang2]' | last }}</div>
+        {% else %}
+        {{ settings.topbar_custom_text | split: '[lang2]' | first }}
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{%- endif -%}
+<div class="header-middle">
+  <div class="header container">
+    <div class="header-left">
+      <div class="menu-icon"><a href="javascript:void(0)" title="Menu"><i class="fa fa-bars"></i></a></div>
+      {% include 'header-logo' %}
+    </div>
+    <div class="header-center"> 
+      <div class="search-area show-icon-tablet">
+        <a href="javascript:void(0);" class="search-icon"><span><i class="icon-magnifier"></i></span></a>
+        {% include 'header-search' %}
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="cart-area">
+        {% if settings.header_custom_text != '' %}
+        <div class="custom-block">
+          {% if settings.language_enable %}
+          <div class="lang1">{{ settings.header_custom_text | split: '[lang2]' | first }}</div>
+          <div class="lang2">{{ settings.header_custom_text | split: '[lang2]' | last }}</div>
+          {% else %}
+          {{ settings.header_custom_text | split: '[lang2]' | first }}
+          {% endif %}
+        </div>
+        {% endif %}
+        <div class="mini-cart">
+          {% include 'header-cart' %}
+        </div>
+        
+       

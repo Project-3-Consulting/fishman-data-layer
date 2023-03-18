@@ -1,0 +1,459 @@
+<div data-section-id="{{ section.id }}" data-section-type="main-section">
+  <div id="main-block-{{ section.id }}" class="block-by-collection main-tab-products" style="margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};">
+    <div class="container">
+      <div class="row">
+        <div class="shop-by-collection tab-product-collection tab-{{section.settings.tab_style}}{%if section.settings.tab_style == 'style1' %} col-md-12{%endif%}">
+          {%- if section.blocks.size > 0 -%}
+          <div class="col-md-2 collection-list ">
+            <span class="filter-title">
+              {%- if settings.language_enable -%}
+              <span class="lang1">{{ section.settings.category_list_title | split: '|' | first }}</span>
+              <span class="lang2">{{ section.settings.category_list_title | split: '|' | last }}</span>
+              {%- else -%}
+              {{ section.settings.category_list_title | split: '|' | first }}
+              {%- endif -%}
+            </span>
+            <div class="tab-selector">
+              <div class="tabs-navigation-wrapper">
+                <span class="open-title-menu"></span>
+                <ul class="nav products-tabs-title" role="tablist">
+                  {%- assign limit = section.settings.limit -%} 
+                  {%- assign columns = section.settings.columns | plus: 0 -%} 
+                  {%- assign aspect_ratio = section.settings.aspect_ratio -%}
+                  {%- assign img_size = section.settings.img_size -%}
+                  {%- assign product_layout = section.settings.product_layout -%}
+                  {%- assign space_product = section.settings.space_product -%} 
+                  {%- assign view_mode = section.settings.view_mode -%}
+                  {%- assign show_nav = section.settings.show_nav -%}  
+                  {%- assign show_paging = section.settings.show_paging -%}  
+                  {%- assign nav_position = section.settings.nav_position -%}  
+                  {%- assign nav_side = section.settings.nav_side -%}  
+                  {%- assign nav_type = section.settings.nav_type -%}  
+                  {%- assign show_nav_hover = section.settings.show_nav_hover -%}  
+                  {%- assign autoplay = section.settings.autoplay -%} 
+                  {%- for block in section.blocks -%}
+                  {%- if block.settings.collection == blank -%}
+                    {%- if collections["frontpage"].products.size > 0 -%}
+                      {%- assign collection = collections["frontpage"] -%}
+                    {%- else -%}
+                      {%- assign collection = collections["all"] -%}
+                    {%- endif -%}
+                  {%- else -%}
+                    {%- assign collection = collections[block.settings.collection] -%}
+                  {%- endif -%} 
+                  <li class="nav-item{% if forloop.first %} active-tab-title{% endif %}" data-atts="{{collection.url}}?page=1&q=viewmode_{{view_mode}}+layout_{{product_layout}}+columns_{{columns}}+limit_{{limit}}+space_{{space_product}}+ratio_{{aspect_ratio}}+imgsize_{{img_size}}{% if view_mode == 'products-slider' %}+autoplay_{{autoplay}}+nav_{{show_nav}}+paging_{{show_paging}}+navpos_{{nav_position}}+navside_{{nav_side}}+navtype_{{nav_type}}+navhover_{{show_nav_hover}}{% endif %}&view=ajax_tab">
+                    <a href="#" class="nav-link{% if forloop.index == 1%} active{% endif %}" data-toggle="tab">
+                      {%- if settings.language_enable -%}
+                      <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+                      <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+                      {%- else -%}
+                      {{ block.settings.title | split: '|' | first }}
+                      {%- endif -%}
+                    </a>
+                  </li>
+                  {%- endfor -%}
+              </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-10 category-detail">
+            <div class="porto-tab-content porto-products">  
+              {%- for block in section.blocks -%} 
+                {%- if forloop.first -%}
+                {%- include 'pt-tab-content' limit:limit, columns:columns, aspect_ratio:aspect_ratio, img_size:img_size, product_layout:product_layout, space_product:space_product, view_mode:view_mode, show_nav:show_nav, show_paging:show_paging, nav_position:nav_position, nav_side:nav_side, nav_type:nav_type, show_nav_hover:show_nav_hover, autoplay:autoplay -%}
+                {%- endif -%} 
+              {%- endfor -%}
+            </div>
+          </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Shop By Collection",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "select",
+      "id": "tab_style",
+      "label": "Tab Style",
+      "options": [
+        {
+          "value": "style1",
+          "label": "Style 1"
+        },
+        {
+          "value": "style2",
+          "label": "Style 2"
+        } 
+      ],
+      "default": "style1"
+    },
+    {
+      "type": "text",
+      "id": "category_list_title",
+      "label": "Category List Title",
+    "default": "Shop By"
+    }, 
+    {
+      "type": "select",
+      "id": "view_mode",
+      "label": "Product View Mode",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "divider",
+          "label": "Grid - Divider Line"
+        },
+        {
+          "value": "products-slider",
+          "label": "Slider"
+        } 
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "select",
+      "id": "product_layout",
+      "label": "Product Layout",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "onhover",
+          "label": "Onhover"
+        },
+        {
+          "value": "outimage_aq_onimage",
+          "label": "Add to Cart, Quick View on Image"
+        },
+        {
+          "value": "outimage_aq_onimage2",
+          "label": "Add to Cart, Quick View on Image with Padding"
+        },
+        {
+          "value": "awq_onimage",
+          "label": "Links On Image"
+        },
+        {
+          "value": "outimage",
+          "label": "Out of Image"
+        },
+        {
+          "value": "onimage",
+          "label": "On Image"
+        },
+        {
+          "value": "onimage2",
+          "label": "On Image with Overlay 1"
+        },
+        {
+          "value": "onimage3",
+          "label": "On Image with Overlay 2"
+        },
+        {
+          "value": "quantity",
+          "label": "Show Quantity Input"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "checkbox",
+      "id": "aspect_ratio",
+      "label": "Keep Image Aspect Ratio", 
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "img_size",
+      "label": "Image size(set width/height image, set sample format)",
+	  "default":"400x400"
+    },
+    {
+      "type": "select",
+      "id": "space_product",
+      "label": "Space between products",
+      "options": [
+        {
+          "value": "30",
+          "label": "30"
+        },
+        {
+          "value": "25",
+          "label": "25"
+        },
+        {
+          "value": "20",
+          "label": "20"
+        },
+        {
+          "value": "15",
+          "label": "15"
+        },
+        {
+          "value": "10",
+          "label": "10"
+        },
+        {
+          "value": "8",
+          "label": "8"
+        },
+        {
+          "value": "7",
+          "label": "7"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "1-5",
+          "label": "1.5"
+        },
+        {
+          "value": "0",
+          "label": "0"
+        }
+      ],
+      "default": "10"
+    }, 
+    {
+      "type": "text",
+      "id": "limit",
+      "label": "Number of products to show",
+      "default": "12"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Products per row",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        } 
+      ],
+      "default": "4"
+    },
+    {
+      "type": "header",
+      "content": "Products Slider Config"
+    }, 
+    {
+      "type": "text",
+      "id": "autoplay",
+      "label": "Slideshow",
+      "info": "Change to any integrer for example 5000 to play every 5 seconds. Leave empty to disable autoplay.",
+      "default": "5000"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav",
+      "label": "Show Navigation",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "nav_position",
+      "label": "Navigation Position",
+      "options": [
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "nav-center-images-only",
+          "label": "Middle of Images"
+        } 
+      ],
+      "default": "middle"
+    },
+    {
+      "type": "select",
+      "id": "nav_side",
+      "label": "Nav inside/outside",
+      "options": [
+        {
+          "value": "",
+          "label": "Default"
+        },
+        {
+          "value": "nav-pos-inside",
+          "label": "Inside"
+        },
+        {
+          "value": "nav-pos-outside",
+          "label": "Outside"
+        } 
+      ] 
+    },
+    {
+      "type": "select",
+      "id": "nav_type",
+      "label": "Nav Type",
+      "options": [
+        {
+          "value": "",
+          "label": "Default"
+        },
+        {
+          "value": "rounded-nav",
+          "label": "Rounded"
+        },
+        {
+          "value": "big-nav",
+          "label": "Big & Full Width"
+        },
+        {
+          "value": "nav-style-1",
+          "label": "Simple Arrow 1"
+        },
+        {
+          "value": "nav-style-2",
+          "label": "Simple Arrow 2"
+        },
+        {
+          "value": "nav-style-4",
+          "label": "Simple Arrow 3"
+        },
+        {
+          "value": "nav-style-3",
+          "label": "Square Grey Arrow"
+        } 
+      ],
+      "default": "nav-style-4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav_hover",
+      "label": "Show nav on hover"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_paging",
+      "label": "Show Paging"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Collection Title",
+      	  "default": "Collection Title"
+        },
+        {
+          "type":"collection",
+          "id":"collection",
+          "label":"Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop By Collection",
+      "category": "Products",
+      "blocks": [
+        {
+          "type": "collection",
+          "settings": {
+            "title": "NEW ARRIVALS"
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "MEN"
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "WOMAN"
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "BOYS"
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "GIRLS"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

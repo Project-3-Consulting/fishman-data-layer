@@ -1,0 +1,251 @@
+<div class="mobile-canvas-overlay close-left"></div>
+<!-- end config style -->
+<div class="block-main-canvas canvas-left">
+  <div class="canvas-icon sicon-left d-block d-lg-none"><a href="javascript:void(0)"><i class="fa fa-sliders"></i></a></div>
+  <div class="canvas-inner sidebar-style-{{ section.settings.sidebar_style }}">
+    {%- if section.blocks.size > 0 -%}
+      {%- for block in section.blocks -%}
+      {%- case block.type -%}
+      {%- when 'html' -%}
+        <div class="block html-sidebar">
+          {% if settings.language_enable %}
+          <div class="lang1">{{ block.settings.html| split: '|' | first }}</div>
+          <div class="lang2">{{ block.html | split: '|' | last }}</div>
+          {% else %}
+          {{ block.settings.html | split: '|' | first }}
+          {% endif %}
+        </div> 
+      {%- when 'products' -%}
+        <div class="block bestseller sidebar-cate-toogle">
+          <div class="block-title">
+            <h3>
+              {% if settings.language_enable %}
+              <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+              <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+              {% else %}
+              {{ block.settings.title | split: '|' | first }}
+              {% endif %}
+            </h3>
+          </div>
+          <div class="sidebar-content block-content">
+            {% include 'bestseller-product', sb_collection: block.settings.collection, sb_limit: block.settings.limit %}
+          </div>
+        </div> 
+      {%- when 'filter' -%}
+        {%- if settings.collection_sidebar_filters == 'groups' or settings.collection_sidebar_filters == 'tags' -%}
+    	{%- if template == 'collection' or template == 'collection.grid' or template == 'collection.list' or template == 'collection.grid_24' or template == 'collection.grid_36' or template == 'collection.grid_all' or template == 'collection.list_24' or template == 'collection.list_36' or template == 'collection.list_all' or template == 'collection.4-columns' or template == 'collection.5-columns' or template == 'collection.6-columns' or template == 'collection.fullwidth' or template == 'collection.layout-list' or template == 'collection.list_all' -%}
+        <div class="block block-layered-nav">
+          <div class="block-content">
+            {% include 'layer-nav' %}
+            {% if settings.collection_sidebar_filters == 'tags' %}
+            <dl class="narrow-by-list">
+              <div class="narrow-item">
+                <dt>
+                  <span {% if settings.language_enable %}data-translate="collections.general.refine_by"{% endif %}>{{'collections.general.refine_by' | t}}</span>
+                  {% if current_tags.size > 0 %}<a href="javascript:;" class="clearall" {% if settings.language_enable %}data-translate="collections.general.clear_all"{% endif %}>{{ 'collections.general.clear_all' | t }}</a>{% endif %}
+                </dt>
+                <dd class="layer-filter">
+                  <ol class="swatch-list fields">
+                    {% for custom_tag in collection.all_tags %}
+                    {% if current_tags contains custom_tag %}
+                    <li>
+                      <div class="item swatch-checkbox active">
+                        <div class="input-container">
+                          <input type="checkbox" value="{{ custom_tag | handleize }}" class="checkbox smart_input" checked="checked" />
+                          <div class="input-skin">
+                            <i class="visible-unchecked icon-check-empty"></i>
+                            <i class="visible-checked icon-check"></i>
+                          </div>
+                        </div>
+                        <span class="name">{{ custom_tag | remove_first: cat_item | remove: '_' }}</span>
+                      </div>
+                    </li>
+                    {% else %}
+                    <li>
+                      <div class="item swatch-checkbox">
+                        <div class="input-container">
+                          <input type="checkbox" value="{{ custom_tag | handleize }}" class="checkbox smart_input" />
+                          <div class="input-skin">
+                            <i class="visible-unchecked icon-check-empty"></i>
+                            <i class="visible-checked icon-check"></i>
+                          </div>
+                        </div>
+                        <span class="name">{{ custom_tag | remove_first: cat_item | remove: '_' }}</span>
+                      </div>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                  </ol>
+                </dd>
+              </div>
+            </dl>
+            {% endif %}
+          </div>
+        </div>
+    	{%- endif -%}
+        {%- endif -%}
+      {%- when 'menu_collection' -%}
+        <div class="block block-nav sidebar-cate-toogle">
+          <div class="block-title">
+            <h3><span {% if settings.language_enable %}data-translate="collections.sidebar.categories"{% endif %}>{{ 'collections.sidebar.categories' | t }}</span></h3>
+            <span class="collapse">
+              <i class="icon-up-dir"></i>
+              <i class="icon-down-dir"></i>
+            </span>
+          </div>
+          <div class="sidebar-content block-content">
+            {% include 'menu-category', menu_collection: block.settings.menu_collection, show_count: block.settings.show_count %}
+          </div>
+        </div>  
+      {%- when 'menu' -%}
+    	<div class="main-sidebar-menu category-menu-style-default_new">
+        {%- include 'sidebar-sidemenu', sb_menu: block.settings.menu -%}
+    	</div>
+      {%- endcase -%}
+      {%- endfor -%}
+    {%- endif -%} 
+  </div>
+</div>
+<script type="text/javascript">
+  jQuery(function($) {
+    $('.canvas-icon.sicon-left, .close-left').click(function(event) {
+      if(!$('body').hasClass('canvas-left')) {
+        $('body').addClass('mobile-canvas-shown');
+        $('body').addClass('canvas-left', function() {
+          setTimeout(function(){
+            $(document).one("click",function(e) {
+              var target = e.target;
+              if (!$(target).is('.canvas-left .block') && !$(target).parents().is('.canvas-left .canvas-inner')) {
+                $('body').removeClass('canvas-left');
+                $('body').removeClass('mobile-canvas-shown');
+              }
+            });
+          }, 111);
+        });
+      } else{
+        $('body').removeClass('canvas-left');
+        $('body').removeClass('mobile-canvas-shown');
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Sidebar Left",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    }, 
+    {
+      "type": "select",
+      "id": "sidebar_style",
+      "label": "Sidebar Style",
+      "options": [
+        {
+          "value": "1",
+          "label": "Style 1"
+        },
+        {
+          "value": "2",
+          "label": "Style 2"
+        },
+        {
+          "value": "3",
+          "label": "Style 3"
+        }
+      ],
+      "default": "1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "html",
+      "name": "Custom Block",
+      "settings": [  
+        {
+          "type": "header", 
+          "content": "Custom Html"
+        },
+        {
+          "type": "html",
+          "id": "html",
+          "label": "Custom Block",
+          "default": "<h2>Custom HTML Block</h2><h5>This is a custom sub-title.</h5><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras non placerat mi. Etiam non tellus </p>"
+        } 
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Side Menu",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header", 
+          "content": "General"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Sidebar Menu"
+        }
+      ]
+    },
+    {
+      "type": "products",
+      "name": "Collection Products",
+      "settings": [  
+        {
+          "type": "header", 
+          "content": "General"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Collection title",
+          "default": "Featured"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection:"
+        },
+        {
+          "type": "text",
+          "id": "limit",
+          "label": "Limit",
+          "default": "3"
+        }
+      ]
+    },
+    {
+      "type": "filter",
+      "name": "Collection Filtering",
+      "limit": 1 
+	},
+    {
+      "type": "menu_collection",
+      "name": "Menu Collection",
+      "limit": 1,
+      "settings": [  
+        {
+          "type": "header", 
+          "content": "General"
+        },
+        {
+          "type": "link_list",
+          "id": "menu_collection",
+          "label": "Menu Collection"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_count",
+          "label": "Show counts product for menu collection?",
+          "default": false
+        }
+      ]
+    }
+  ] 
+}
+{% endschema %}

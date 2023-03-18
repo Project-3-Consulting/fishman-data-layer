@@ -74,7 +74,7 @@
         {%- endif -%}
       {%- endfor -%}
      
-    	{%- if stockNotManaged == true -%}{%- assign variantStock = null -%}{%- endif -%}
+    {%- if stockNotManaged == true -%}{%- assign variantStock = null -%}{%- endif -%}
   	digitalData.product = {
   		'item_id': {{ product.id | json }},
   		'item_sku': {{ product.sku | json}},
@@ -84,10 +84,10 @@
   		'tags': {{ product.tags | json}},
   		'brand': {{ product.vendor | json }},
   		'inStock': {{ product.available | json }},
-  	    'stockQty': {{ variantStock | json }},
-      	'hasNoVariants': {{ product.has_only_default_variant | json }},
+  	  'stockQty': {{ variantStock | json }},
+      'hasNoVariants': {{ product.has_only_default_variant | json }},
   		'numVariants': {{ product.variants.size | json }},
-  	    'variantsInStock':  {{ variantsAvailable | json}},
+  	  'variantsInStock':  {{ variantsAvailable | json}},
   		'variants': [
   			{%- for variant in product.variants -%}
   				{
@@ -108,7 +108,7 @@
   		'ordersCount': {{ customer.orders_count | json }},
   		'totalSpent': {{ customer.total_spent | money_without_currency | json }},
   		'acceptsMarketing': {{ customer.accepts_marketing | json }},
-        'tags': {{ customer.tags | json }}
+       'tags': {{ customer.tags | json }}
   	};
   {%- endif -%}
   {%- if cart -%}

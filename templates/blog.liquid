@@ -1,0 +1,97 @@
+<!-- /templates/blog.liquid -->
+{% paginate blog.articles by 3 %}
+{%- if settings.sidebar_move == blank -%}
+{% include 'breadcrumb' %}
+{%- endif -%}
+<div class="blog-container">
+<div class="container">
+  <div class="row">
+    {%- assign sidebar_class = 'col-lg-3' -%}
+    {%- if settings.sidebar_left_blog != blank -%}
+    {%- assign main_class = 'col-lg-9' -%}
+    {%- endif -%} 
+    {%- if settings.sidebar_right_blog != blank -%}
+    {%- assign main_class = 'col-lg-9' -%} 
+    {%- endif -%}
+    {%- if settings.sidebar_left_blog != blank and settings.sidebar_right_blog != blank -%}
+    {%- assign main_class = 'col-lg-6' -%} 
+    {%- endif -%}  
+    {%- if settings.sidebar_left_blog == blank and settings.sidebar_right_blog == blank -%}
+    {%- assign main_class = 'col-lg-12' -%} 
+    {%- endif -%}
+    <div class="{{main_class}} main-content main-blog">
+      {%- if settings.sidebar_move != blank -%}
+      {% include 'breadcrumb' %}
+      {%- endif -%}
+      <div class="blog-wrapper">
+        {% for article in blog.articles %}
+        <div class="post-wrapper">
+          <div class="post-banner">
+            {{ article.excerpt }}
+          </div>
+          <div class="post-date">
+            <span class="day">{{ article.published_at | date: '%d' }}</span>
+            <span class="month">{{ article.published_at | date: '%b' }}</span>
+          </div>
+          <div class="postTitle">
+            <a href="{{ article.url }}">
+              {% if settings.language_enable %}
+              <h2 class="lang1">{{ article.title | split: '|' | first }}</h2>
+              <h2 class="lang2">{{ article.title | split: '|' | last }}</h2>
+              {% else %}
+                <h2>{{ article.title | split: '|' | first }}</h2>
+              {% endif %}
+            </a>
+          </div>
+          <div class="postContent">
+            <p>
+              {% if settings.language_enable %}
+              <span class="lang1">{{ article.content | strip_html | split: '[lang2]' | first | truncatewords: 50 }}</span>
+              <span class="lang2">{{ article.content | strip_html | split: '[lang2]' | last | truncatewords: 50 }}</span>
+              {% else %}
+              {{ article.content | strip_html | split: '[lang2]' | first | truncatewords: 50}}
+              {% endif %}
+            </p>
+          </div>
+          <div class="postDetails pl-0">
+            {% capture author %}{{ article.author }}{% endcapture %}
+
+            {% capture date %}<time datetime='{{ article.published_at | date: '%Y-%m-%d' }}'>{{ article.published_at | date: format: 'month_day_year' }}</time>{% endcapture %}
+            <span class="blog_author" {% if settings.language_enable %}data-translate="blogs.article.author_on_date_html|date:{{date}},author:{{author}}" translate-item="blog-date-author"{% endif %}>
+              <i class="icon-calendar"></i>
+              {{ 'blogs.article.author_on_date_html' | t: date: date, author: author }}
+            </span>
+            <span class="blog_author" {% if settings.language_enable %}data-translate="blogs.article.by_admin|author:{{author}}" translate-item="blog-date-author"{% endif %}>
+              <i class="icon-user"></i>
+              {{ 'blogs.article.by_admin' | t: author: author }}
+            </span>
+            <a class="readmore" href="{{ article.url }}" {% if settings.language_enable %}data-translate="blogs.article.read_more"{% endif %}>
+              {{- 'blogs.article.read_more' | t -}}
+              <i class="icon-right-dir"></i>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+        {% if paginate.pages > 1 %}
+        <div class="pagenav-wrap">
+          <div class="pagination">
+            {% include 'pagination' %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% if settings.sidebar_left_blog != blank %}
+    <div class="{{sidebar_class}} sidebar col-left">
+      {% section 'sidebar-left-blog' %}
+    </div>
+    {% endif %}  
+    {% if settings.sidebar_right_blog != blank %}
+    <div class="{{sidebar_class}} sidebar-right col-right">
+      {% section 'sidebar-right-blog' %}
+    </div>
+    {% endif %} 
+  </div>
+</div>
+</div>
+{% endpaginate %}

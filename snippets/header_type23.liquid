@@ -1,0 +1,59 @@
+{%- if settings.header_topbar_disable == blank -%}
+<div class="header-top">
+  <div class="header-row container">
+    <div class="header-col header-left">
+      {% if settings.topbar_custom_text != '' %}
+      <div class="top-custom-block">
+        {% if settings.language_enable %}
+        <div class="lang1"><div class="block-inner">{{ settings.topbar_custom_text | split: '[lang2]' | first }}</div></div>
+        <div class="lang2"><div class="block-inner">{{ settings.topbar_custom_text | split: '[lang2]' | last }}</div></div>
+        {% else %}
+        <div class="block-inner">{{ settings.topbar_custom_text | split: '[lang2]' | first }}</div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="header-col header-right">
+      <div class="top-links-area show-icon-tablet">
+        <div class="top-links-icon">
+          <a href="javascript:;" {% if settings.language_enable %}data-translate="header.settings.links"{% endif %}>{{ 'header.settings.links' | t }}</a>
+        </div>
+        {% section 'header-toplink-menu' %}
+      </div>
+      {% include 'header-setting' %}
+    </div>
+  </div>
+</div>
+{%- endif -%}
+<div class="header-main">
+  <div class="header header-row container">
+    <div class="header-left">
+      <div class="menu-icon"><a href="javascript:void(0)" title="Menu"><i class="fa fa-bars"></i></a></div>
+      {% include 'header-logo' %} 
+    </div> 
+    <div class="header-right">
+      <div class="cart-area">
+        <div class="search-area show-icon">
+          <a href="javascript:void(0);" class="search-icon"><span><i class="icon-search"></i></span></a>
+          {% include 'header-search' %}
+        </div>
+        {% if settings.header_custom_text != '' %}
+        <div class="custom-block">
+          {% if settings.language_enable %}
+          <div class="lang1">{{ settings.header_custom_text | split: '[lang2]' | first }}</div>
+          <div class="lang2">{{ settings.header_custom_text | split: '[lang2]' | last }}</div>
+          {% else %}
+          {{ settings.header_custom_text | split: '[lang2]' | first }}
+          {% endif %}
+        </div>
+        {% endif %} 
+        <div class="wishlist">
+          <a class="wishlist-popup" href="javascript:void(0)"><i class="Simple-Line-Icons-heart"></i></a>
+        </div>
+        <div class="mini-cart">
+          {% include 'header-cart' %}
+        </div>
+      </div> 
+    </div> 
+  </div>
+</div>  

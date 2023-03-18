@@ -1,0 +1,654 @@
+<div data-section-id="{{ section.id }}" data-section-type="{% if section.settings.view_mode == 'creative' %}banner-masonry-section{% else %}filter-products-section{% endif %}">
+  <div id="filter-products-{{ section.id }}" class="box_product box_product_{{section.id}}"> 
+    <div class="products-collection porto-products title-{{section.settings.title_border_style}} {{section.settings.extra_class}}">
+      <h3>Code:</h3>
+      <code>
+        <!-- Shortcode product --> 
+        [product title="{{section.settings.title}}" title_align="{{section.settings.title_align}}" title_style="{{section.settings.title_border_style}}" limit="{{section.settings.limit}}" cols="{{section.settings.columns}}" space="{{section.settings.space_product}}" loadmore="{{section.settings.use_loadmore}}" view_mode="{{section.settings.view_mode}}" product_layout="{{section.settings.product_layout}}" creative_layout="{{section.settings.creative_layout}}" extra_class="{{section.settings.extra_class}}" aspect_ratio="{{section.settings.aspect_ratio}}" img_size="{{section.settings.img_size}}" layout_height="{{section.settings.creative_layout_height}}" autoplay="{{ section.settings.autoplay }}" arrows="{{section.settings.show_nav}}" arrows_side="{{section.settings.nav_side}}" arrows_type="{{section.settings.nav_type}}" arrows_onhover="{{section.settings.show_nav_hover}}" positionArr="{{section.settings.nav_position}}" dots="{{section.settings.show_paging}}" positionPag="{{section.settings.page_position}}" handle_collection="{{section.settings.collection}}" ] 
+        <!-- / Shortcode product -->
+      </code>
+      <style>
+        code {
+          background-color: #d1d1d1;
+          padding: 3px 2px;
+          color: #777;
+          font-size: 14px;
+          line-height: 24px;
+        }
+        .products-collection > h3,.products-collection code {text-align: center;}
+      </style> 
+      {%- if section.settings.title != '' -%}
+      <h2 class="section-title{% if section.settings.view_mode == 'products-slider' %} slider-title{% endif %} text-{{section.settings.title_align}}">
+        {%- if section.settings.title_border_style == 'border-middle' and section.settings.title_align != 'left' -%}
+        <span class="line-l"></span>
+        {%- endif -%}
+        <span class="inline-title">
+          {%- if settings.language_enable -%}
+          <span class="lang1">{{ section.settings.title | split: '|' | first }}</span>
+          <span class="lang2">{{ section.settings.title | split: '|' | last }}</span>
+          {%- else -%}
+          {{ section.settings.title | split: '|' | first }}
+          {%- endif -%}
+        </span>
+        {%- if section.settings.title_border_style == 'border-middle' and section.settings.title_align != 'right' -%}
+        <span class="line-r"></span>
+        {%- endif -%}
+      </h2>
+      {%- endif -%} 
+      {%- assign view_mode = section.settings.view_mode -%}
+      {%- assign columns = section.settings.columns | plus: 0 -%}
+      {%- assign limit = section.settings.limit | default: 7 -%}
+      {%- assign space_product = section.settings.space_product -%} 
+      {%- assign aspect_ratio = section.settings.aspect_ratio -%}
+      {%- assign img_size = section.settings.img_size -%}
+      {%- assign product_layout = section.settings.product_layout -%} 
+      {%- assign view_mode_class = view_mode -%}  
+      {%- assign creative_layout = section.settings.creative_layout -%}
+      {%- assign creative_layout_height = section.settings.creative_layout_height -%}  
+      {%- assign show_nav = section.settings.show_nav -%}  
+      {%- assign show_paging = section.settings.show_paging -%}  
+      {%- assign nav_position = section.settings.nav_position -%}  
+      {%- assign nav_side = section.settings.nav_side -%}  
+      {%- assign nav_type = section.settings.nav_type -%}  
+      {%- assign page_position = section.settings.page_position -%}  
+      {%- assign show_nav_hover = section.settings.show_nav_hover -%}  
+      {%- assign page_position = section.settings.page_position -%}  
+      {%- assign autoplay = section.settings.autoplay -%}   
+      {%- case view_mode -%}
+        {%- when 'divider' -%} 
+          {%- assign view_mode_class = 'grid divider-line' -%} 
+        {%- when 'creative' -%} 
+          {%- assign view_mode_class = 'grid-creative' -%} 
+      {%- endcase -%}   
+      {%- if columns >= 4 -%}
+      {%- capture class_grid %}item-1200-{{ columns }} item-992-4 item-768-3 item-640-2 item-320-1{%- endcapture -%}
+      {%- endif -%}
+      {%- if columns == 3 -%}
+      {%- capture class_grid %}item-1200-{{ columns }} item-640-2 item-320-1{%- endcapture -%} 
+      {%- endif -%}
+      {%- if columns <= 2 -%}
+      {%- capture class_grid %}item-1200-{{ columns }}{%- endcapture -%}  
+      {%- endif -%}
+      
+      {%- assign layout_class = 'product-' | append:product_layout  -%}
+      {%- assign pt_layout = product_layout  -%}
+      {%- case product_layout -%}
+      {%- when 'onhover' -%}
+          {%- assign layout_class = 'product-default show-links-hover' -%} 
+      {%- when 'outimage_aq_onimage' -%}
+          {%- assign layout_class = 'product-outimage_aq_onimage' -%} 
+      {%- when 'outimage_aq_onimage2' -%}
+          {%- assign layout_class = 'product-outimage_aq_onimage with-padding' -%}  
+      {%- when 'quantity' -%}
+          {%- assign layout_class = 'product-wq_onimage' -%} 
+      {%- endcase -%} 
+      {%- if view_mode == 'creative' -%}
+        {%- case product_layout -%}
+        {%- when 'default','onhover','outimage_aq_onimage','outimage_aq_onimage2','awq_onimage','outimage','quantity' -%}
+          {%- assign layout_class = 'product-onimage' -%}  
+          {%- assign pt_layout = 'onimage'  -%}
+        {%- endcase -%} 
+      {%- endif -%} 
+      
+      {%- assign paginate_index = limit | plus: 0 -%}
+      {%- assign name_collection = section.settings.collection -%}
+       {%- if name_collection == blank -%}{%- assign name_collection = "all" -%}{%- endif -%}
+      {%- assign collection = collections[name_collection] -%}
+      
+      {%- paginate collection.products by paginate_index -%} 
+      <div class="porto-products-element"> 
+        <div class="category-products products products-container {{view_mode_class}} products-spacing-{{space_product}}{% if view_mode == 'grid' or view_mode == 'divider' %} {{class_grid}}{% endif %}">
+          {%- if view_mode == 'products-slider' -%}
+          <div class="data-carousel"
+               data-auto="{{ autoplay }}"
+               data-items="{{ columns }}"
+               data-1200="{{ columns }}"
+               data-992="4"
+               data-768="3"
+               data-640="2"
+               data-480="2"
+               data-320="2"
+               data-nav="{{ show_nav }}" 
+               data-paging="{{ show_paging }}"
+               data-margin='0' style="display: none;"></div>
+          {%- endif -%}
+          {%- if collection.products.size == 0 -%}
+          <p style="text-align:center;color:#999;padding: 5px 10px;font-style:italic;" {% if settings.language_enable %}data-translate="products.general.no_more_product"{% endif %}>{{ 'products.general.no_more_product' | t }}</p>
+          {%- else -%} 
+          <div class="{% if view_mode != 'products-slider' %}products-grid {% endif %}{% if view_mode == 'creative' %} masonry-grid masonry-init{% endif %} {% if view_mode == 'products-slider' %} owl-carousel carousel-init owl-carousel-lazy {{nav_position}}{% if nav_position != 'show-nav-title' %} {{nav_side}} {{nav_type}}{% endif %} {{page_position}} {% if show_nav_hover %}show-nav-hover{% endif %}{% else %} columns{{columns}}{% endif %}">
+            {%- if view_mode == 'creative' -%}
+              {%- case aspect_ratio -%}
+              {%- when true %}
+                {%- assign _img_size1 = creative_layout_height | times: 2 | append: 'x' -%}
+                {%- assign _img_size2 = creative_layout_height | append: 'x' -%}
+              {%- else -%}
+                {%- assign _img_w = creative_layout_height | remove: 'px' | plus: 0 -%}
+                {%- assign _img_h = creative_layout_height | remove: 'px' | plus: 0  -%}
+                {%- capture _img_size1 -%}{{_img_w | times: 2}}x{{_img_h | times: 2}}{%- endcapture -%}
+                {%- capture _img_size2 -%}{{_img_w}}x{{_img_h}}{%- endcapture -%}
+              {%- endcase -%} 
+              {%- assign _cr_hindex1 = creative_layout_height | remove: 'px' -%}
+              {%- assign _cr_hindex2 = creative_layout_height | remove: 'px' | divided_by: 2 -%}
+              {%- assign _cr_hindex3 = creative_layout_height | remove: 'px' | times: 2 | divided_by: 3 -%}
+              {%- assign _cr_hindex4 = creative_layout_height | remove: 'px' | divided_by: 3 -%}
+              {%- capture _cr_style1 -%}style="height:{{_cr_hindex1}}px;"{%- endcapture -%}
+              {%- capture _cr_style2 -%}style="height:{{_cr_hindex2}}px;"{%- endcapture -%}
+              {%- capture _cr_style3 -%}style="height:{{_cr_hindex3}}px;"{%- endcapture -%}
+              {%- capture _cr_style4 -%}style="height:{{_cr_hindex4}}px;"{%- endcapture -%}
+            <div class="grid-sizer"></div>
+            {%- endif -%}
+            {%- case aspect_ratio -%}
+            {%- when true -%}
+              {%- assign image_width = img_size | split: 'x' | first -%}
+              {%- assign image_height = '' -%}
+              {%- assign ar = 1 -%}
+            {%- else -%}
+              {%- assign image_width = img_size | split: 'x' | first -%}
+              {%- assign image_height = img_size | split: 'x' | last -%}
+              {%- if image_width < image_height -%}
+                {%- assign ar = image_width | divided_by: 1 -%}
+              {%- else -%}
+                {%- assign ar = image_width | divided_by: image_height -%}
+              {%- endif -%}
+            {%- endcase -%}  
+            {%- for product in collection.products -%} 
+            {%- if view_mode == 'creative' -%}
+              {%- case creative_layout -%} 
+                {%- when '2' -%}
+                  {%- capture cr_class -%}
+                      {%- cycle 'grid-col-1-2 grid-height-2-3', 'grid-col-1-4 grid-height-1-2', 'grid-col-1-4 grid-height-1', 'grid-col-1-2 grid-height-1-3', 'grid-col-1-4 grid-height-1-2' -%}
+                  {%- endcapture -%}
+                  {%- capture cr_img_size -%} 
+                      {%- cycle _img_size1, _img_size2, _img_size1, _img_size1, _img_size2 -%}
+                  {%- endcapture -%}
+                  {%- capture cr_style -%}
+                      {%- cycle _cr_style3, _cr_style2, _cr_style1, _cr_style4, _cr_style2 -%}
+                  {%- endcapture -%} 
+                {%- when '3' -%}
+                  {%- capture cr_class -%}
+                      {%- cycle 'grid-col-1-2 grid-height-1', 'grid-col-1-4 grid-height-1', 'grid-col-1-4 grid-height-1-2', 'grid-col-1-4 grid-height-1-2' -%}
+                  {%- endcapture -%}
+                  {%- capture cr_img_size -%} 
+                      {%- cycle _img_size1, _img_size1, _img_size2, _img_size2 -%}
+                  {%- endcapture -%}
+                  {%- capture cr_style -%}
+                      {%- cycle _cr_style1, _cr_style1, _cr_style2, _cr_style2 -%}
+                  {%- endcapture -%} 
+                {%- when '4' -%}
+                  {%- capture cr_class -%}
+                      {%- cycle 'grid-col-2-5 grid-col-md-1 grid-col-lg-2-3 grid-height-1', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2','grid-col-2-5 grid-col-md-1 grid-col-lg-2-3 grid-height-1', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2', 'grid-col-1-5 grid-col-md-1-2 grid-col-lg-1-3 grid-height-1-2' -%}
+                  {%- endcapture -%}
+                  {%- capture cr_img_size -%} 
+                      {%- cycle _img_size1, _img_size2, _img_size2, _img_size2, _img_size2, _img_size2, _img_size2, _img_size2, _img_size2, _img_size2, _img_size1, _img_size2, _img_size2, _img_size2 -%}
+                  {%- endcapture -%}
+                  {%- capture cr_style -%}
+                      {%- cycle _cr_style1, _cr_style2, _cr_style2, _cr_style2, _cr_style2, _cr_style2, _cr_style2, _cr_style2, _cr_style2, _cr_style2, _cr_style1, _cr_style2, _cr_style2, _cr_style2 -%}
+                  {%- endcapture -%}  
+                {%- when '5' -%}
+                  {%- capture cr_class -%}
+                      {%- cycle 'grid-col-5-12 grid-col-lg-1-2 grid-col-md-1 grid-height-1', 'grid-col-1-4 grid-col-lg-1-2 grid-col-md-1-2 grid-height-1', 'grid-col-2-12 grid-col-lg-1-4 grid-col-md-1-2 grid-height-1-2', 'grid-col-2-12 grid-col-lg-1-4 grid-col-md-1-2 grid-height-1-2', 'grid-col-2-12 grid-col-lg-1-4 grid-col-md-1-2 grid-height-1-2', 'grid-col-2-12 grid-col-lg-1-4 grid-col-md-1-2 grid-height-1-2' -%}
+                  {%- endcapture -%}
+                  {%- capture cr_img_size -%} 
+                      {%- cycle _img_size1, _img_size1, _img_size2, _img_size2, _img_size2, _img_size2 -%}
+                  {%- endcapture -%}
+                  {%- capture cr_style -%}
+                      {%- cycle _cr_style1, _cr_style1, _cr_style2, _cr_style2, _cr_style2, _cr_style2 -%}
+                  {%- endcapture -%} 
+                {%- else -%}
+                  {%- capture cr_class -%}
+                      {%- cycle 'grid-col-1-2 grid-height-1', 'grid-col-1-4 grid-height-1-2', 'grid-col-1-4 grid-height-1', 'grid-col-1-4 grid-height-1-2' -%}
+                  {%- endcapture -%}
+                  {%- capture cr_img_size -%} 
+                      {%- cycle _img_size1, _img_size2, _img_size1, _img_size2 -%}
+                  {%- endcapture -%}
+                  {%- capture cr_style -%}
+                      {%- cycle _cr_style1, _cr_style2, _cr_style1, _cr_style2 -%}
+                  {%- endcapture -%}
+              {%- endcase -%}
+            {%- endif -%} 
+            {%- if view_mode == 'creative' -%}  
+              {%- assign image_size = cr_img_size -%} 
+            {%- else -%}
+              {%- capture image_size -%}{{ image_width }}x{{ image_height }}{%- endcapture -%} 
+              {%- assign pt = 100 | divided_by: ar | append: '%' -%}
+            {%- endif -%}
+            {% include 'pt-product-loop' %} 
+            {%- endfor -%}
+          </div>
+          {%- endif -%}
+        </div>
+        {%- if paginate.pages > 1 and view_mode != 'products-slider' and section.settings.use_loadmore != blank -%}
+        <div class="products-footer" data-status="{% if paginate.next.is_link %}have-posts{% else %}no-more-posts{% endif %}">
+          {%- if paginate.next.is_link -%} 
+          {%- assign next_url = paginate.next.url | split: '?' | last -%} 
+          <a href="{{collection.url}}?{{next_url}}&q=viewmode_{{view_mode}}+layout_{{product_layout}}+columns_{{columns}}+limit_{{paginate_index}}+space_{{space_product}}+ratio_{{aspect_ratio}}+imgsize_{{img_size}}+creative_{{creative_layout}}+creativeh_{{creative_layout_height}}&view=ajax" class="btn btn-borders btn-md btn-default porto-load-more porto-products-load-more load-on-click">
+            <span class="load-more-label" {% if settings.enable_multilang %}data-translate="collections.general.show_more"{% endif %}>{{ 'collections.general.show_more' | t}}</span>
+            <span class="load-more-loading" {% if settings.enable_multilang %}data-translate="collections.general.loading"{% endif %}>{{ 'collections.general.loading' | t}} ...</span>
+          </a> 
+          {%- endif -%}  
+        </div>
+        {%- endif -%}
+      </div>
+      {%- endpaginate -%}
+    </div> 
+  </div>
+</div> 
+{% schema %}
+{
+  "name": "Shortcode Products",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Config"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Shortcode Title"
+    },
+    {
+      "type": "select",
+      "id": "title_border_style",
+      "label": "Title Border Style",
+      "options": [
+        {
+          "value": "",
+          "label": "No Border"
+        },
+        {
+          "value": "border-bottom",
+          "label": "Bottom Border"
+        },
+        {
+          "value": "border-middle",
+          "label": "Middle Border"
+        }
+      ],
+      "default": "border-bottom"
+    }, 
+    {
+      "type": "select",
+      "id": "title_align",
+      "label": "Title align",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        } 
+      ],
+      "default": "left"
+    }, 
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "limit",
+      "label": "Number of products to show",
+      "default": "8"
+    }, 
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Products per row",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        } 
+      ],
+      "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_loadmore",
+      "label": "Show loadmore button",
+      "default": false,
+	  "info": "Use only for layout grid"
+    }, 
+    {
+      "type": "header",
+      "content": "Design Config"
+    },
+    {
+      "type": "select",
+      "id": "view_mode",
+      "label": "Product View Mode",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "divider",
+          "label": "Grid - Divider Line"
+        },
+        {
+          "value": "creative",
+          "label": "Grid - Creative"
+        },
+        {
+          "value": "list",
+          "label": "List"
+        },
+        {
+          "value": "products-slider",
+          "label": "Slider"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "select",
+      "id": "product_layout",
+      "label": "Product Layout",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "onhover",
+          "label": "Onhover"
+        },
+        {
+          "value": "outimage_aq_onimage",
+          "label": "Add to Cart, Quick View on Image"
+        },
+        {
+          "value": "outimage_aq_onimage2",
+          "label": "Add to Cart, Quick View on Image with Padding"
+        },
+        {
+          "value": "awq_onimage",
+          "label": "Links On Image"
+        },
+        {
+          "value": "outimage",
+          "label": "Out of Image"
+        },
+        {
+          "value": "onimage",
+          "label": "On Image"
+        },
+        {
+          "value": "onimage2",
+          "label": "On Image with Overlay 1"
+        },
+        {
+          "value": "onimage3",
+          "label": "On Image with Overlay 2"
+        },
+        {
+          "value": "quantity",
+          "label": "Show Quantity Input"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "checkbox",
+      "id": "aspect_ratio",
+      "label": "Keep Image Aspect Ratio", 
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "img_size",
+      "label": "Image size(set width/height image, set sample format)",
+	  "default":"400x400"
+    },
+    {
+      "type": "select",
+      "id": "space_product",
+      "label": "Space between products",
+      "options": [
+        {
+          "value": "30",
+          "label": "30"
+        },
+        {
+          "value": "25",
+          "label": "25"
+        },
+        {
+          "value": "20",
+          "label": "20"
+        },
+        {
+          "value": "15",
+          "label": "15"
+        },
+        {
+          "value": "10",
+          "label": "10"
+        },
+        {
+          "value": "8",
+          "label": "8"
+        },
+        {
+          "value": "7",
+          "label": "7"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "1-5",
+          "label": "1.5"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "0",
+          "label": "0"
+        }
+      ],
+      "default": "10"
+    }, 
+    {
+      "type": "text",
+      "id": "extra_class",
+      "label": "Extra Class"
+    },
+    {
+      "type": "header",
+      "content": "Grid creative view mode config"
+    }, 
+    {
+      "type": "select",
+      "id": "creative_layout",
+      "label": "Grid layout",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        }
+      ],
+      "default": "1"
+    }, 
+    {
+      "type": "text",
+      "id": "creative_layout_height",
+      "label": "Grid height (px)", 
+      "default": "600"
+    },
+    {
+      "type": "header",
+      "content": "Products Slider Config"
+    }, 
+    {
+      "type": "text",
+      "id": "autoplay",
+      "label": "Slideshow",
+      "info": "Change to any integrer for example 5000 to play every 5 seconds. Leave empty to disable autoplay.",
+      "default": "5000"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav",
+      "label": "Show Navigation",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "nav_position",
+      "label": "Navigation Position",
+      "options": [
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "nav-center-images-only",
+          "label": "Middle of Images"
+        },
+        {
+          "value": "show-nav-title",
+          "label": "Top"
+        },
+        {
+          "value": "nav-bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "middle"
+    },
+    {
+      "type": "select",
+      "id": "nav_side",
+      "label": "Nav inside/outside",
+      "options": [
+        {
+          "value": "",
+          "label": "Default"
+        },
+        {
+          "value": "nav-pos-inside",
+          "label": "Inside"
+        },
+        {
+          "value": "nav-pos-outside",
+          "label": "Outside"
+        } 
+      ] 
+    },
+    {
+      "type": "select",
+      "id": "nav_type",
+      "label": "Nav Type",
+      "options": [
+        {
+          "value": "",
+          "label": "Default"
+        },
+        {
+          "value": "rounded-nav",
+          "label": "Rounded"
+        },
+        {
+          "value": "big-nav",
+          "label": "Big & Full Width"
+        },
+        {
+          "value": "nav-style-1",
+          "label": "Simple Arrow 1"
+        },
+        {
+          "value": "nav-style-2",
+          "label": "Simple Arrow 2"
+        },
+        {
+          "value": "nav-style-4",
+          "label": "Simple Arrow 3"
+        },
+        {
+          "value": "nav-style-3",
+          "label": "Square Grey Arrow"
+        } 
+      ],
+      "default": "nav-style-4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav_hover",
+      "label": "Show nav on hover"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_paging",
+      "label": "Show Paging"
+    },
+    {
+      "type": "select",
+      "id": "page_position",
+      "label": "Paging Position",
+      "options": [ 
+        {
+          "value": "",
+          "label": "Bottom"
+        },
+        {
+          "value": "show-dots-title-right",
+          "label": "Top right"
+        }
+      ] 
+    }
+  ] 
+}
+{% endschema %}

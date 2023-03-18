@@ -1,0 +1,280 @@
+.suggestion-price {
+display:none;
+}
+
+
+.rsErrorMessage{
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .03em;
+}
+
+.rsProductOfferContainer {
+  padding:0px 5px;
+  margin-top:10px;
+}
+
+.rsPrice,
+.money {
+    font-size: 22px;
+    letter-spacing: .03em;
+    color: #222;
+    font-weight: 600;
+}
+
+
+.rsShippingGetItByWrapper, .rsShippingOrderWithinWrapper {
+    font-size: 12px !important;
+}
+.rsFreeNDayShippingWrapper {
+  font-size: 14px;
+  font-weight: 800;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.rsShippingGetItByWrapper,
+.rsShippingOrderWithinWrapper {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.rsFasterShippingWrapper {
+  margin-bottom: 6px;
+  margin-top: 6px;
+}
+
+.rsFasterShippingLabel {
+  font-size: 0.9em;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.rsPopoverWrapper {
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  -webkit-transform: translateY(calc(-100% - 13px));
+  transform: translateY(calc(-100% - 13px));
+  width: 100%;
+  max-width: 300px;
+}
+
+.rsPopoverCloseX {
+  position: absolute;
+  right: 6px;
+  top: 0;
+  line-height: 1;
+  font-size: 22px;
+  color: #333;
+}
+
+.rsPopoverBody {
+  font-size: .8em;
+  font-weight: 600;
+  white-space: normal !important;
+}
+
+
+.rsPopoverTriangle {
+  position: absolute;
+  bottom: -9px;
+  width: 0;
+  height: 0;
+  border: 10px solid #fff;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  box-shadow: -3px 3px 3px 0 rgba(0, 0, 0, .26);
+}
+
+.rsReferencePrice {
+  text-decoration: line-through;
+  font-size: 16px;
+  color: #cc0000;
+  font-weight: 700;
+}
+
+.rsReferencePriceMessage {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.rsInventoryOutOfStock {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rsInventoryOutOfStockPreorder {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rsInventoryLowStockQuantityWrapper {
+  font-size: 13px;
+  color: #cc0000;
+  display:none;
+}
+
+ .rsForm {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0px 0px;
+}
+
+.rsAddToCartForm
+  input[type=submit] {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0em;
+    text-transform: uppercase;
+    transition: .1s width: 100%;
+    background-color: #08c;
+    border-radius: 3px;
+    border: solid 1px #2D7FF9;
+    margin: 10px 0px 0px 0px;
+    padding: 0px 20px 0px 20px;
+    height: 40px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 350px;
+    -webkit-appearance: none;
+    appearance: none;
+    animation-duration: 0.5s;
+    transition: all 0.2s linear;
+  }
+
+  input[type=submit]:hover {
+    color: #fff;
+    background-color: #000000;
+    border-radius: 3px;
+    border: solid 1px #000;
+  }
+
+  .rsCallToOrder {
+    color: #cc0000;
+    font-size: 28px;
+    font-weight: 900;
+    padding-top: 10px;
+  }
+
+a.rsUserAccountLink {
+    color: #555;
+    font-size: 19px;
+  }
+
+  a.rsUserAccountLink:hover {
+    color: #0088cc;
+    animation-duration: 0.5s;
+    transition: all 0.2s linear;
+  }
+
+  a.rsCartLink,
+  a.rsCartIcon {
+    color: #555;
+    font-size: 19px;
+  }
+
+  .rsCartLink:hover {
+    color: #0088cc;
+    animation-duration: 0.5s;
+    transition: all 0.2s linear;
+  }
+
+  .rsCartCount {
+    position: absolute;
+    min-width: 20px;
+    min-height: 20px;
+    text-align: center;
+    padding: 2px 3px 0px 3px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 14px;
+    z-index: 2;
+    font-weight: 500;
+    background-color: #222529;
+    color: #fff;
+    right: 14px;
+    top: 34px;
+    border: solid #fff 1px;
+    font-size: 10px;
+    line-height: 1.4;
+    font-weight: 700;
+  }
+  
+  @media (max-width: 991px){
+    .rsCartCount {
+    right: 22px;
+    top: 24px;
+  }
+  }
+  
+  .rsUserAccountLinkWrapper,
+  .rsCartLinkAndItemCountWrapper{
+      margin: 0px 14px;
+  }
+.products .product-col h3 {
+    white-space: none !important;
+}
+/* Qty Select Form */
+/*
+.rsForm {
+  position: relative;
+}
+
+.rsItemQtySelectLabelText {
+  font-size: 12px;
+  font-family: "helvetica", sans-serif;
+  font-weight: 800;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  display: block;
+  margin-right: 0px;
+  color: #666;
+}
+
+.rsItemQtySelect {
+  min-width: 60px;
+  margin-bottom: 0;
+  padding: 8px 12px 8px;
+  font-family: "helvetica", sans-serif;
+  border-radius: 4px;
+  border: solid 1px #ccc;
+}
+
+.rsAddToCartForm input[type=submit] {
+  animation-duration: 0.5s;
+  box-sizing: border-box;
+  background: #cc0000;
+  border: solid 1px #cc0000;
+  border-radius: 4px;
+  padding: 9px 20px;
+  color: white;
+  cursor: pointer;
+  margin-left: 66px;
+  letter-spacing: normal;
+  line-height: 16.8px;
+  font-family: "helvetica", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+  max-width: 280px;
+  word-spacing: 0px;
+  writing-mode: horizontal-tb;
+  -webkit-font-smoothing: antialiased;
+  position: absolute;
+  bottom: 0px;
+}
+
+input[type=submit]:hover {
+  color: #fff;
+  background-color: #000;
+  border-radius: 4px;
+  border: solid 1px #000;
+}*/
+/* Qty Select Form */

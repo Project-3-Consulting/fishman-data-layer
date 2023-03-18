@@ -1,0 +1,1152 @@
+<div data-section-id="{{ section.id }}" data-section-type="main-section">
+  <div id="main-block-{{ section.id }}" class="main-section-one main_section main_section_{{ section.id }}" style="margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};">
+    <div class="container">
+      <div class="row"> 
+        {%- if section.blocks.size > 0 -%}
+        {%- assign s-class = 'order-1 side-left' -%}
+        {%- assign m-class = 'order-2' -%}
+        {% if section.settings.sidebar_pos == '2' %}
+          {%- assign s-class = 'order-2 side-right' -%}
+          {%- assign m-class = 'order-1' -%}
+        {% endif %}
+        <div class="col-lg-9 {{m-class}} {{section.settings.extra_class_main}}">  
+        {%- for block in section.blocks -%}
+        {%- if block.type == 'slideshow' or block.type == 'main-html' or block.type == 'tab' -%}
+          {%- if block.type == 'slideshow' -%}
+          <div class="data-slideshow"
+                 data-rtl="true"
+                 data-auto="{{ block.settings.auto_speed }}"
+                 data-paging="{{ block.settings.slide_pagination }}"
+                 data-nav="{{ block.settings.slide_navigation }}"
+                 data-transition="{{ block.settings.slide_transition }}"
+                 data-prev='' 
+                 data-next='' style="display: none;"></div>
+          <div class="slideshow owl-carousel owl-carousel-lazy nav-inside nav-inside-left {% if block.settings.page_style == '1' %}dots-style-1{% endif%}" style="margin-bottom:{{block.settings.margin_bottom | remove: 'px' | append: 'px'}};">  
+            {%- for block in section.blocks -%} 
+              {%- if block.type == 'slide' -%}
+              {%- assign image_url = 'bg1140x500.png' | asset_url -%}
+              {%- assign background_image = 'bg1140x500.png' | asset_url -%}
+              {%- assign ar = 2.28 -%}
+              {%- if block.settings.image != blank -%}
+                {%- assign image_url = block.settings.image | img_url: 'master' -%}
+                {%- assign ar = block.settings.image.aspect_ratio -%} 
+              {%- endif -%}
+              {%- if block.settings.background_image != blank -%}
+                {%- assign background_image = block.settings.background_image | img_url: 'master' -%}
+                {%- assign ar = block.settings.background_image.aspect_ratio -%}
+              {%- endif -%} 
+              <div class="item" style="padding-top: {{100 | divided_by: ar}}%;background-color: {{block.settings.lazy_back_color}};">
+                {%- if block.settings.background_image_use == '1' -%}
+                <div class="slide-bg lazyload lazypreload" data-bg="{{background_image}}"></div> 
+                {%- endif -%}
+                {%- if block.settings.image_use == '1' -%}
+                <img class="slide-image" data-src="{{ image_url }}" alt="{{block.settings.image.alt}}"/>
+                {%- endif -%} 
+                <div class="content-container"> 
+                  {%- if settings.language_enable -%}
+                  <div class="lang1">{{ block.settings.content | split: '[lang2]' | first }}</div>
+                  <div class="lang2">{{ block.settings.content | split: '[lang2]' | last }}</div>
+                  {%- else -%}
+                  {{ block.settings.content | split: '[lang2]' | first }}
+                  {%- endif -%} 
+                </div> 
+              </div>
+              {%- endif -%} 
+            {%- endfor -%} 
+          </div>
+          {%- endif -%}
+          {%- if block.type == 'main-html' -%}
+          	<div class="porto-custom-block">
+            {%- if settings.language_enable -%}
+              <div class="lang1">
+                {%- assign content_lg1 = block.settings.html | split: '[lang2]' | first -%}
+                {% include 'shortcode' load: content_lg1 %}
+              </div>
+              <div class="lang2">
+              {%- assign content_lg2 = block.settings.html | split: '[lang2]' | last -%}
+              {% include 'shortcode' load: content_lg2 %} 
+            </div>
+            {%- else -%}
+              {%- assign content_lg = block.settings.html | split: '[lang2]' | first -%}
+              {% include 'shortcode' load: content_lg %}
+            {%- endif -%}
+        	</div>
+          {%- endif -%}
+          {%- if block.type == 'tab' -%}
+          <div class="tab-product-collection{% if block.settings.show_loadmore == '0'%} hide-loadmore{% endif%}" style="margin-bottom:{{block.settings.margin_bottom | remove: 'px' | append: 'px'}};">
+            <div class="category-list"> 
+              <div class="tab-selector"> 
+                <ul class="nav products-tabs-title" role="tablist">
+                  {% assign numb = 0 %} 
+                  {%- assign limit = block.settings.limit -%} 
+                  {%- assign columns = block.settings.columns | plus: 0 -%} 
+                  {%- assign aspect_ratio = block.settings.aspect_ratio -%}
+                  {%- assign img_size = block.settings.img_size -%}
+                  {%- assign product_layout = block.settings.product_layout -%}
+                  {%- assign space_product = block.settings.space_product -%} 
+                  {%- assign view_mode = block.settings.view_mode -%}
+                  {%- assign show_nav = block.settings.show_nav -%}  
+                  {%- assign show_paging = block.settings.show_paging -%}  
+                  {%- assign nav_position = block.settings.nav_position -%}  
+                  {%- assign nav_side = block.settings.nav_side -%}  
+                  {%- assign nav_type = block.settings.nav_type -%}  
+                  {%- assign show_nav_hover = block.settings.show_nav_hover -%}  
+                  {%- assign autoplay = block.settings.autoplay -%} 
+                  {%- for block in section.blocks -%}
+                  {%- if block.type == 'tab-items' -%}
+                  {% assign numb = numb | plus: 1 %}
+                  {%- if block.settings.collection == blank -%}
+                  {%- if collections["frontpage"].products.size > 0 -%}
+                  {%- assign collection = collections["frontpage"] -%}
+                  {%- else -%}
+                  {%- assign collection = collections["all"] -%}
+                  {%- endif -%}
+                  {%- else -%}
+                  {%- assign collection = collections[block.settings.collection] -%}
+                  {%- endif -%} 
+                  <li class="nav-item {% if numb == 1 %} active-tab-title{% endif %}" data-atts="{{collection.url}}?page=1&q=viewmode_{{view_mode}}+layout_{{product_layout}}+columns_{{columns}}+limit_{{limit}}+space_{{space_product}}+ratio_{{aspect_ratio}}+imgsize_{{img_size}}{% if view_mode == 'products-slider' %}+autoplay_{{autoplay}}+nav_{{show_nav}}+paging_{{show_paging}}+navpos_{{nav_position}}+navside_{{nav_side}}+navtype_{{nav_type}}+navhover_{{show_nav_hover}}{% endif %}&view=ajax_tab">
+                    <a href="#" class="nav-link{% if numb == 1 %} active{% endif %}" data-toggle="tab">
+                      {%- if settings.language_enable -%}
+                      <span class="lang1">{{ block.settings.title | split: '|' | first }}</span>
+                      <span class="lang2">{{ block.settings.title | split: '|' | last }}</span>
+                      {%- else -%}
+                      {{ block.settings.title | split: '|' | first }}
+                      {%- endif -%}
+                    </a>
+                  </li>
+                  {%- endif -%}
+                  {%- endfor -%}
+                </ul> 
+              </div>
+            </div>
+            <div class="category-detail">
+              <div class="porto-tab-content porto-products"> 
+                {% assign numb2 = 0 %} 
+                {%- for block in section.blocks -%} 
+                {%- if block.type == 'tab-items' -%}
+                {% assign numb2 = numb2 | plus: 1 %}
+                {% if numb2 == 1 %}
+                {%- include 'pt-tab-content' limit:limit, columns:columns, aspect_ratio:aspect_ratio, img_size:img_size, product_layout:product_layout, space_product:space_product, view_mode:view_mode, show_nav:show_nav, show_paging:show_paging, nav_position:nav_position, nav_side:nav_side, nav_type:nav_type, show_nav_hover:show_nav_hover, autoplay:autoplay -%}
+                {%- endif -%} 
+                {%- endif -%} 
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+          {%- endif -%}
+        {%- endif -%} 
+        {%- endfor-%}
+        </div>  
+        <div class="col-lg-3 {{s-class}} {{section.settings.extra_class_sidebar}}">
+          {%- for block in section.blocks -%}
+          {%- if block.type == 'sidemenu' or block.type == 'testimonial' or block.type == 'blog' or block.type == 'box' or block.type == 'sidebar-html' or block.type == 'accordion-menu'-%}
+          {%- if block.type == 'sidemenu' -%}
+          <div class="widget-sidebar side-custom-menu custom-menu-{{ section.id }} category-menu-style-default_new" style="margin-bottom:{{block.settings.margin_bottom | remove: 'px' | append: 'px'}};">
+            <h2>
+              {%- if settings.language_enable -%}
+              <span class="lang1">{{ block.settings.menu-title | split: '|' | first }}</span>
+              <span class="lang2">{{ block.settings.menu-title | split: '|' | last }}</span>
+              {%- else -%}
+              {{ block.settings.menu-title | split: '|' | first }}
+              {%- endif -%}
+            </h2>
+            {%- include 'side-menu' sb_menu: block.settings.linklist -%}
+          </div>
+          {%- endif -%}
+          {%- if block.type == 'accordion-menu' -%}
+          <div class="widget-sidebar side-custom-menu custom-menu-{{ section.id }}" style="margin-bottom:{{block.settings.margin_bottom | remove: 'px' | append: 'px'}};">
+            <h2>
+              {%- if settings.language_enable -%}
+              <span class="lang1">{{ block.settings.menu-title | split: '|' | first }}</span>
+              <span class="lang2">{{ block.settings.menu-title | split: '|' | last }}</span>
+              {%- else -%}
+              {{ block.settings.menu-title | split: '|' | first }}
+              {%- endif -%}
+            </h2>
+            {%- include 'menu-category' menu_collection: block.settings.linklist -%}
+          </div>
+          {%- endif -%}
+          {%- if block.type == 'testimonial' -%}
+          <div class="widget-sidebar testimonials" style="margin-bottom:{{block.settings.margin_bottom | remove: 'px' | append: 'px'}};">
+            <div class="owl-banner">
+              <div class="data-carousel"
+                   data-items="1"
+                   data-auto="{{block.settings.autoplay}}"
+                   data-paging="{{block.settings.show_paging}}"
+                   data-nav="false"
+                   data-prev=''
+                   data-margin="0"
+                   data-next='' style="display: none;"></div>
+              <div class="owl-carousel carousel-init {% if block.settings.page_style == '1' %}dots-style-1{% endif%}">
+                {%- for block in section.blocks -%}
+                {%- if block.type == 'testi' -%} 
+                <div class="item"> 
+                  <div class="testimonial testimonial-style-4 testimonial-no-borders">
+                    <div class="testimonial-author clearfix">
+                      <div class="testimonial-author-thumbnail">
+                        {%- if block.settings.image != blank -%}
+                        {%- assign img_url = block.settings.image | img_url: 'master' -%}
+                        {%- else -%}
+                        {%- assign img_url = 'img60x60.png' | asset_url -%}
+                        {%- endif -%}
+                        <img class="img-responsive img-circle" data-src="{{ img_url }}" alt="">
+                      </div>
+                      <p><strong style="color: #222529;">{{ block.settings.name_author | split: '|' | first }}</strong><span>{{ block.settings.desc_author | split: '|' | first }}</span></p>
+                    </div>
+                    <div class="testimonial-arrow-down"></div>
+                    <blockquote>
+                      {%- if settings.language_enable -%}
+                      <p class="lang1">{{ block.settings.content | split: '[lang2]' | first }}</p>
+                      <p class="lang2">{{ block.settings.content | split: '[lang2]' | last }}</p>
+                      {%- else -%}
+                      {{ block.settings.content | split: '[lang2]' | first }}
+                      {%- endif -%}
+                    </blockquote>
+                  </div> 
+                </div>  
+                {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+          {%- endif -%}
+          {%- if block.type == 'blog' -%}
+          {%- assign blog = blogs[block.settings.blog] -%}
+          {%- unless blog.empty? -%}
+          <div class="widget-sidebar latest_news owl-top-narrow" style="margin-bottom:{{block.settings.margin_bottom | remove: 'px' | append: 'px'}};">
+            <div class="recent-posts">
+              <div class="data-carousel"
+                   data-auto="{{ block.settings.autoplay }}"
+                   data-items="1"
+                   data-1200="1"
+                   data-992="1"
+                   data-768="1"
+                   data-640="1"
+                   data-480="1"
+                   data-320="1"
+                   data-paging="{{ block.settings.show_paging }}"
+                   data-nav="false"
+                   data-margin="15"
+                   data-prev='' 
+                   data-next='' style="display: none;"></div>
+              <div class="post-carousel owl-carousel carousel-init {% if block.settings.page_style == '1' %}dots-style-1{% endif%}">
+                {%- for article in blog.articles limit:block.settings.post_limit -%}
+                <div class="item">  
+                  <div class="grid-box">
+                    <div class="post-image m-b-md"> 
+                      {%- if article.image -%} 
+                      <a href="{{ article.url }}"> 
+                        <div class="img-thumbnail"><img data-src="{{ article | img_url: '300x' }}" alt="" /></div>
+                      </a>
+                      {%- endif -%}  
+                      <div class="post-date"> 
+                        <span class="day">{{ article.published_at | date: '%d' }}</span>
+                        <span class="month">{{ article.published_at | date: '%b' }}</span> 
+                      </div>
+                    </div>
+                    <!-- Post meta before content -->
+                    <div class="post-content">
+                      <h4 class="entry-title">
+                        <a href="{{ article.url }}">
+                          {%- if settings.language_enable -%}
+                          <span class="lang1">{{ article.title | split: '|' | first }}</span>
+                          <span class="lang2">{{ article.title | split: '|' | last }}</span>
+                          {%- else -%}
+                          {{ article.title | split: '|' | first }}
+                          {%- endif -%}
+                        </a>
+                      </h4>  
+                      <p class="post-excerpt">
+                          {%- if settings.language_enable -%}
+                          <span class="lang1">{{ article.content | strip_html | split: '[lang2]' | first | truncatewords: 15}}</span>
+                          <span class="lang2">{{ article.content | strip_html | split: '[lang2]' | last | truncatewords: 15}}</span>
+                          {%- else -%}
+                          {{ article.content |strip_html | split: '[lang2]' | first | truncatewords: 15}}
+                          {%- endif -%}
+                          <a class="read-more" href="{{ article.url }}" {% if settings.language_enable %}data-translate="blogs.article.read_more"{% endif %}>{{ 'blogs.article.read_more' | t }} <i class="fa fa-angle-right"></i></a>
+                        </p>
+                    </div>
+                    <!-- Post meta after content --> 
+                    <div class="clearfix"></div>
+                  </div> 
+                </div>
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+          {%- endunless -%}
+          {%- endif -%}
+          {%- if block.type == 'box' -%}
+          <div class="widget-sidebar widget-boxslide" style="margin-bottom:{{block.settings.margin_bottom | remove: 'px' | append: 'px'}};">
+            <div class="owl-box-icon">
+              <div class="data-carousel"
+                   data-items="1"
+                   data-auto="{{block.settings.autoplay}}"
+                   data-paging="{{block.settings.show_paging}}"
+                   data-nav="false"
+                   data-prev=''
+                   data-margin="0"
+                   data-next='' style="display: none;"></div>
+              <div class="owl-carousel carousel-init {% if block.settings.page_style == '1' %}dots-style-1{% endif%}">
+                {%- for block in section.blocks -%}
+                {%- if block.type == 'box-item' -%} 
+                <div class="item"> 
+                  {%- if settings.language_enable -%}
+                  <div class="lang1">{{ block.settings.html | split: '|' | first }}</div>
+                  <div class="lang2">{{ block.settings.html | split: '|' | last }}</div>
+                  {%- else -%}
+                  {{ block.settings.html | split: '|' | first }}
+                  {%- endif -%}
+                </div>  
+                {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+          {%- endif -%}
+          {%- if block.type == 'sidebar-html' -%}
+            <div class="widget-sidebar widget-custom">
+              {%- if settings.language_enable -%}
+              <div class="lang1">
+                {%- assign content_lg1 = block.settings.html | split: '[lang2]' | first -%}
+                {% include 'shortcode' load: content_lg1 %}
+              </div>
+              <div class="lang2">
+                {%- assign content_lg2 = block.settings.html | split: '[lang2]' | last -%}
+                {% include 'shortcode' load: content_lg2 %} 
+              </div>
+              {%- else -%}
+              {%- assign content_lg = block.settings.html | split: '[lang2]' | first -%}
+              {% include 'shortcode' load: content_lg %}
+              {%- endif -%} 
+            </div>
+          {%- endif -%} 
+          {%- endif -%} 
+          {%- endfor-%}
+        </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Main Section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+    {
+      "type": "header",
+      "content": "Sidebar Settings"
+    },
+    {
+      "type": "select",
+      "id": "sidebar_pos",
+      "label": "Sidebar Position",
+      "options": [
+      {
+        "value": "1",
+        "label": "Left"
+      },
+      {
+        "value": "2",
+        "label": "Right"
+      }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "extra_class_sidebar",
+      "label": "Extra Class Sidebar" 
+    },
+    {
+      "type": "text",
+      "id": "extra_class_main",
+      "label": "Extra Class Main" 
+    }
+  ],
+  "blocks": [
+	{
+      "type": "slideshow",
+      "name": "Main - Slideshow",
+	  "limit": 1,
+      "settings": [ 
+        {
+          "type": "header",
+          "content": "General"
+        }, 
+        {
+          "type": "text",
+          "id": "margin_bottom",
+          "label": "Margin Bottom Slideshow",
+		  "default": "24px" 
+        },
+        {
+          "type": "text",
+          "id": "auto_speed",
+          "label": "Autoplay",
+          "info": "If you would like the slider to auto-rotate, then set the autoplay rotate time in ms here. I.e. you would enter '5000' for the slider to rotate every 5 seconds.",
+          "default": "5000"
+        },
+        {
+          "type": "select",
+          "id": "slide_transition",
+          "label": "Transition",
+          "options": [
+            {
+              "value": "slide",
+              "label": "Slide"
+            },
+            {
+              "value": "fade",
+              "label": "Fade"
+            }
+          ],
+          "default": "slide"
+        },
+        {
+          "type": "select",
+          "id": "slide_navigation",
+          "label": "Navigation",
+          "info": "Choose if you would like to display the left\/right arrows on the slider.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "select",
+          "id": "slide_pagination",
+          "label": "Pagination",
+          "info": "Choose if you would like to display the slider pagination.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "select",
+          "id": "page_style",
+          "label": "Pagination Style", 
+          "options": [
+            {
+              "value": "0",
+              "label": "Default"
+            },
+            {
+              "value": "1",
+              "label": "Style 1"
+            }
+          ],
+          "default": "1"
+        } 
+      ]
+    },
+    {
+      "type": "slide",
+      "name": "Main - Slideshow - Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background Image"
+        },
+        {
+          "type": "select",
+          "id": "background_image_use",
+          "label": "Background Image Use?",
+          "info": "Choose if you would like to display background image.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "image_use",
+          "label": "Image Use?",
+          "info": "Choose if you would like to display image.",
+          "options": [
+            {
+              "value": "1",
+              "label": "Yes"
+            },
+            {
+              "value": "0",
+              "label": "No"
+            }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "color",
+          "id": "lazy_back_color",
+          "label": "Lazyload Background Color",
+          "default": "#eee"
+        },  
+        {
+          "type": "html",
+          "id": "content",
+          "label": "Content HTML",
+          "info": "Write your own html/css for slider content"
+        }
+      ]
+    },
+    {
+      "type": "tab",
+      "name": "Main - Tab Filter", 
+      "settings": [ 
+    	{
+          "type": "header",
+          "content": "General"
+        },
+        {
+          "type": "text",
+          "id": "margin_bottom",
+          "label": "Margin Bottom Menu",
+		  "default": "24px" 
+        },
+        {
+          "type": "select",
+          "id": "view_mode",
+          "label": "Product View Mode",
+          "options": [
+            {
+              "value": "grid",
+              "label": "Grid"
+            },
+            {
+              "value": "divider",
+              "label": "Grid - Divider Line"
+            },
+            {
+              "value": "products-slider",
+              "label": "Slider"
+            } 
+          ],
+          "default": "grid"
+        },
+        {
+          "type": "select",
+          "id": "product_layout",
+          "label": "Product Layout",
+          "options": [
+            {
+              "value": "default",
+              "label": "Default"
+            },
+            {
+              "value": "onhover",
+              "label": "Onhover"
+            },
+            {
+              "value": "outimage_aq_onimage",
+              "label": "Add to Cart, Quick View on Image"
+            },
+            {
+              "value": "outimage_aq_onimage2",
+              "label": "Add to Cart, Quick View on Image with Padding"
+            },
+            {
+              "value": "awq_onimage",
+              "label": "Links On Image"
+            },
+            {
+              "value": "outimage",
+              "label": "Out of Image"
+            },
+            {
+              "value": "onimage",
+              "label": "On Image"
+            },
+            {
+              "value": "onimage2",
+              "label": "On Image with Overlay 1"
+            },
+            {
+              "value": "onimage3",
+              "label": "On Image with Overlay 2"
+            },
+            {
+              "value": "quantity",
+              "label": "Show Quantity Input"
+            }
+          ],
+          "default": "default"
+        },
+        {
+          "type": "checkbox",
+          "id": "aspect_ratio",
+          "label": "Keep Image Aspect Ratio", 
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "img_size",
+          "label": "Image size(set width/height image, set sample format)",
+          "default":"400x400"
+        },
+        {
+          "type": "select",
+          "id": "space_product",
+          "label": "Space between products",
+          "options": [
+            {
+              "value": "30",
+              "label": "30"
+            },
+            {
+              "value": "25",
+              "label": "25"
+            },
+            {
+              "value": "20",
+              "label": "20"
+            },
+            {
+              "value": "15",
+              "label": "15"
+            },
+            {
+              "value": "10",
+              "label": "10"
+            },
+            {
+              "value": "8",
+              "label": "8"
+            },
+            {
+              "value": "7",
+              "label": "7"
+            },
+            {
+              "value": "6",
+              "label": "6"
+            },
+            {
+              "value": "2",
+              "label": "2"
+            },
+            {
+              "value": "1-5",
+              "label": "1.5"
+            },
+            {
+              "value": "0",
+              "label": "0"
+            }
+          ],
+          "default": "10"
+        }, 
+        {
+          "type": "text",
+          "id": "limit",
+          "label": "Number of products to show",
+          "default": "12"
+        },
+        {
+          "type": "select",
+          "id": "columns",
+          "label": "Products per row",
+          "options": [
+            {
+              "value": "1",
+              "label": "1"
+            },
+            {
+              "value": "2",
+              "label": "2"
+            },
+            {
+              "value": "3",
+              "label": "3"
+            },
+            {
+              "value": "4",
+              "label": "4"
+            },
+            {
+              "value": "5",
+              "label": "5"
+            },
+            {
+              "value": "6",
+              "label": "6"
+            } 
+          ],
+          "default": "4"
+        },
+        {
+          "type": "radio",
+          "id": "show_loadmore",
+          "label": "Show Button Loadmore",
+          "options": [
+            {
+              "value": "0",
+              "label": "No"
+            },
+            {
+              "value": "1",
+              "label": "Yes"
+            } 
+          ],
+          "default": "0"
+        }, 
+        {
+          "type": "header",
+          "content": "Products Slider Config"
+        }, 
+        {
+          "type": "text",
+          "id": "autoplay",
+          "label": "Slideshow",
+          "info": "Change to any integrer for example 5000 to play every 5 seconds. Leave empty to disable autoplay.",
+          "default": "5000"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_nav",
+          "label": "Show Navigation",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "nav_position",
+          "label": "Navigation Position",
+          "options": [
+            {
+              "value": "middle",
+              "label": "Middle"
+            },
+            {
+              "value": "nav-center-images-only",
+              "label": "Middle of Images"
+            } 
+          ],
+          "default": "middle"
+        },
+        {
+          "type": "select",
+          "id": "nav_side",
+          "label": "Nav inside/outside",
+          "options": [
+            {
+              "value": "",
+              "label": "Default"
+            },
+            {
+              "value": "nav-pos-inside",
+              "label": "Inside"
+            },
+            {
+              "value": "nav-pos-outside",
+              "label": "Outside"
+            } 
+          ] 
+        },
+        {
+          "type": "select",
+          "id": "nav_type",
+          "label": "Nav Type",
+          "options": [
+            {
+              "value": "",
+              "label": "Default"
+            },
+            {
+              "value": "rounded-nav",
+              "label": "Rounded"
+            },
+            {
+              "value": "big-nav",
+              "label": "Big & Full Width"
+            },
+            {
+              "value": "nav-style-1",
+              "label": "Simple Arrow 1"
+            },
+            {
+              "value": "nav-style-2",
+              "label": "Simple Arrow 2"
+            },
+            {
+              "value": "nav-style-4",
+              "label": "Simple Arrow 3"
+            },
+            {
+              "value": "nav-style-3",
+              "label": "Square Grey Arrow"
+            } 
+          ],
+          "default": "nav-style-4"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_nav_hover",
+          "label": "Show nav on hover"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_paging",
+          "label": "Show Paging"
+        }
+      ]
+    },
+    {
+      "type": "tab-items",
+      "name": "Main - Tab Items", 
+      "settings": [ 
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab Title",
+      	  "default": "Tab Title"
+        },
+        {
+          "type":"collection",
+          "id":"collection",
+          "label":"Collection"
+        }
+      ]
+    },
+    {
+      "type": "main-html",
+      "name": "Main - Custom Html",
+      "settings": [ 
+        {
+          "type":"header",
+          "content":"Html and shortcode"
+        }, 
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title" 
+        },
+        {
+          "type": "html",
+          "id": "html",
+          "label": "Html code or shortcode" 
+        }
+      ]
+    },
+    {
+      "type": "sidemenu",
+      "name": "Sidebar - Side Menu",
+	  "limit": 1,
+      "settings": [ 
+        {
+          "type":"header",
+          "content":"General"
+        },
+        {
+          "type": "text",
+          "id": "margin_bottom",
+          "label": "Margin Bottom Menu",
+		  "default": "24px" 
+        },
+        {
+          "type": "text",
+          "id": "menu-title",
+          "label": "Menu Title",
+		  "default": "Browse Categories"
+        },
+        {
+          "type": "link_list",
+          "id": "linklist",
+          "label": "Navigation link list"
+        }
+      ]
+    },
+    {
+      "type": "accordion-menu",
+      "name": "Sidebar - Accordion Menu",
+	  "limit": 1,
+      "settings": [ 
+        {
+          "type":"header",
+          "content":"General"
+        },
+        {
+          "type": "text",
+          "id": "margin_bottom",
+          "label": "Margin Bottom Menu",
+		  "default": "24px" 
+        },
+        {
+          "type": "text",
+          "id": "menu-title",
+          "label": "Menu Title",
+		  "default": "Browse Categories"
+        },
+        {
+          "type": "link_list",
+          "id": "linklist",
+          "label": "Navigation link list"
+        }
+      ]
+    },
+    {
+      "type": "testimonial",
+      "name": "Sidebar - Testimonial",
+	  "limit": 1,
+      "settings": [ 
+        {
+          "type":"header",
+          "content":"General"
+        },
+        {
+          "type": "text",
+          "id": "margin_bottom",
+          "label": "Margin Bottom Testimonial",
+		  "default": "24px" 
+        },
+        {
+          "type": "text",
+          "id": "autoplay",
+          "label": "Slideshow",
+          "info": "Change to any integrer for example 5000 to play every 5 seconds. Leave empty to disable autoplay.",
+          "default": "5000"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_paging",
+          "label": "Show Paging"
+        },
+        {
+          "type": "select",
+          "id": "page_style",
+          "label": "Pagination Style", 
+          "options": [
+            {
+              "value": "0",
+              "label": "Default"
+            },
+            {
+              "value": "1",
+              "label": "Style 1"
+            }
+          ],
+          "default": "1"
+        }
+      ]
+    },
+    {
+      "type": "testi",
+      "name": "Sidebar - Testi- Item", 
+      "settings": [ 
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content",
+          "default": "Hello, I want to thank you for creating a great template and for the excellent and quick support and help that you have been providing to me as I begin to work with it."
+        },
+        {
+          "type": "text",
+          "id": "name_author",
+          "label": "Name Author",
+          "default": "John Smith"
+        },
+        {
+          "type": "text",
+          "id": "desc_author",
+          "label": "Description Author",
+          "default": "CEO & Founder - Okler"
+        }
+      ]
+    },
+    {
+      "type": "blog",
+      "name": "Sidebar - Blog",
+	  "limit": 1,
+      "settings": [ 
+        {
+          "type":"header",
+          "content":"General"
+        },  
+        {
+          "type": "text",
+          "id": "margin_bottom",
+          "label": "Margin Bottom Blog",
+		  "default": "24px"
+        },
+        {
+          "id": "blog",
+          "type": "blog",
+          "label": "Blog"
+        },
+        {
+          "type": "text",
+          "id": "limit",
+          "label": "Number of article to show",
+          "default": "4"
+        }, 
+        {
+          "type": "text",
+          "id": "autoplay",
+          "label": "Slideshow",
+          "info": "Change to any integrer for example 5000 to play every 5 seconds. Leave empty to disable autoplay."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_paging",
+          "label": "Show Paging"
+        },
+        {
+          "type": "select",
+          "id": "page_style",
+          "label": "Pagination Style", 
+          "options": [
+            {
+              "value": "0",
+              "label": "Default"
+            },
+            {
+              "value": "1",
+              "label": "Style 1"
+            }
+          ],
+          "default": "1"
+        }
+      ]
+    },
+    {
+      "type": "box",
+      "name": "Sidebar - Box Slide",
+	  "limit": 1,
+      "settings": [ 
+        {
+          "type":"header",
+          "content":"General"
+        },
+        {
+          "type": "text",
+          "id": "margin_bottom",
+          "label": "Margin Bottom Box" 
+        },
+        {
+          "type": "text",
+          "id": "autoplay",
+          "label": "Slideshow",
+          "info": "Change to any integrer for example 5000 to play every 5 seconds. Leave empty to disable autoplay."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_paging",
+          "label": "Show Paging"
+        },
+        {
+          "type": "select",
+          "id": "page_style",
+          "label": "Pagination Style", 
+          "options": [
+            {
+              "value": "0",
+              "label": "Default"
+            },
+            {
+              "value": "1",
+              "label": "Style 1"
+            }
+          ],
+          "default": "1"
+        }
+      ]
+    },
+    {
+      "type": "box-item",
+      "name": "Sidebar - Box - Item",
+      "settings": [ 
+        {
+          "type":"header",
+          "content":"Html"
+        },
+        {
+          "type": "html",
+          "id": "html",
+          "label": "Html code",
+		  "default": "<div class=\"porto-sicon-box style_1 top-icon\"><div class=\"porto-sicon-top\"><div class=\"porto-just-icon-wrapper\" style=\"text-align: center;\"><div class=\"porto-sicon-img\" style=\"display: inline-block; font-size: 113px;\"> <img class=\"lazyload\" alt=\"\" data-src=\"https://cdn.shopify.com/s/files/1/1632/5913/files/shop1_off.png\" width=\"113\" height=\"113\" style=\"display: block;\"></div></div></div><div class=\"porto-sicon-header\"><h3 class=\"porto-sicon-title\" style=\"font-weight: 700; font-size: 70px; line-height: 1;\">45<sup>%</sup><sub>off</sub></h3></div><div class=\"porto-sicon-description\" style=\"\"> Lorem ipsum dolor sit amet, consectetur adipiscing elit.<a class=\"porto-sicon-read xx\" href=\"#\">VIEW SALE</a></div></div>"
+        }
+      ]
+    },
+    {
+      "type": "sidebar-html",
+      "name": "Sidebar - Custom Html",
+      "settings": [ 
+        {
+          "type":"header",
+          "content":"Html and shortcode"
+        },
+        {
+          "type": "html",
+          "id": "html",
+          "label": "Html code or shortcode" 
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Main Section",
+      "category": "Main Section"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

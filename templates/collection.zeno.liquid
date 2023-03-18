@@ -1,0 +1,20 @@
+<!-- /templates/collection.liquid -->
+{%- assign limit = settings.collection_products_count | plus:0 -%}
+{%- assign columns = settings.collection_columns | plus: 0 -%}
+{%- assign sidebar-left = settings.sidebar_left_collection -%}
+{%- assign sidebar-right = settings.sidebar_right_collection -%}
+
+{%- if settings.collection_view_mode == 'grid' or settings.collection_view_mode == 'divider' -%}
+	{%- include 'collection_grid' -%}
+{%- else -%}
+	{%- include 'collection_list' -%}
+{%- endif -%}
+        <div class="zn-content collection">
+          {% assign collectionKey = 'zeno-collection-' | append: collection.id %}
+          <link rel="stylesheet" href="{{ collectionKey | append: '.css' | asset_url }}">
+          {% assign oriCollection = collection %} 
+          {% include collectionKey %}
+          {% assign collection = oriCollection %}
+          <script src="{{ collectionKey | append: '.js' | asset_url }}"></script>
+        </div>
+      

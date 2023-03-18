@@ -1,0 +1,384 @@
+<div data-section-id="{{ section.id }}" data-section-type="testimonials-section">
+  <div id="testimonials-section-{{ section.id }}" class="testimonial-section">  
+    <div class="container"> 
+      <div class="porto-testimonial title-{{section.settings.title_border_style}}"  style="background-color:{{section.settings.bg_section_color}}; margin-top: {{section.settings.margin_top | remove: 'px' | append: 'px' }};margin-bottom: {{section.settings.margin_bottom | remove: 'px' | append: 'px' }};padding: {{section.settings.section_padding}};"> 
+        <h2 class="section-title{% if section.settings.view_mode == 'products-slider' %} slider-title{% endif %} text-{{section.settings.title_align}}">
+          {%- if section.settings.title_border_style == 'border-middle' and section.settings.title_align != 'left' -%}
+          <span class="line-l"></span>
+          {%- endif -%}
+          <span class="inline-title">
+            {%- if settings.language_enable -%}
+            <span class="lang1">{{ section.settings.title | split: '|' | first }}</span>
+            <span class="lang2">{{ section.settings.title | split: '|' | last }}</span>
+            {%- else -%}
+            {{ section.settings.title | split: '|' | first }}
+            {%- endif -%}
+          </span>
+          {%- if section.settings.title_border_style == 'border-middle' and section.settings.title_align != 'right' -%}
+          <span class="line-r"></span>
+          {%- endif -%}
+        </h2>  
+        <div class="testimonial-items">
+          <div class="data-carousel"
+               data-auto="{{ section.settings.autoplay }}"
+               data-items="{{ section.settings.item_desktop }}"
+               data-1200="{{ section.settings.item_desktop }}"
+               data-992="{{ section.settings.item_tablet }}"
+               data-768="{{ section.settings.item_tablet }}"
+               data-640="{{ section.settings.item_mobile }}"
+               data-480="{{ section.settings.item_mobile }}"
+               data-320="{{ section.settings.item_mobile }}"
+               data-paging="{{ section.settings.show_paging }}"
+               data-nav="{{ section.settings.show_nav }}"
+               data-margin="{{ section.settings.item_margin }}"
+               data-prev='' 
+               data-next='' style="display: none;"></div>
+          <div class="testimonial-carousel owl-carousel carousel-init owl-carousel-lazy {{section.settings.nav_position}} {{section.settings.nav_side}} {{section.settings.nav_type}} {% if section.settings.show_nav_hover %}show-nav-hover{% endif %}">
+            {%- for block in section.blocks -%} 
+            <div class="item"> 
+              <div class="testimonial testimonial-style-{{section.settings.design}} testimonial-no-borders">
+                <div class="testimonial-author clearfix">
+                  <div class="testimonial-author-thumbnail">
+                    {%- if block.settings.image != blank -%}
+                    {%- assign img_url = block.settings.image | img_url: 'master' -%}
+                    {%- else -%}
+                    {%- assign img_url = 'img60x60.png' | asset_url -%}
+                    {%- endif -%}
+                    <img class="img-responsive img-circle" data-src="{{ img_url }}" alt="">
+                  </div>
+                  <p><strong style="color: #222529;">{{ block.settings.name_author | split: '|' | first }}</strong><span>{{ block.settings.desc_author | split: '|' | first }}</span></p>
+                </div>
+                <div class="testimonial-arrow-down"></div>
+                <blockquote>
+                  {%- if settings.language_enable -%}
+                  <p class="lang1">{{ block.settings.content | split: '[lang2]' | first }}</p>
+                  <p class="lang2">{{ block.settings.content | split: '[lang2]' | last }}</p>
+                  {%- else -%}
+                  {{ block.settings.content | split: '[lang2]' | first }}
+                  {%- endif -%}
+                </blockquote>
+              </div> 
+            </div>  
+            {%- endfor -%}
+          </div>
+        </div> 
+      </div> 
+    </div> 
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [ 
+	{
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "color",
+      "id": "bg_section_color",
+      "label": "Section background color"
+    },
+    {
+      "type": "text",
+      "id": "margin_top",
+      "label": "Section margin top",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "margin_bottom",
+      "label": "Section margin bottom",
+      "info": "40px"
+    },
+    {
+      "type": "text",
+      "id": "section_padding",
+      "label": "Section padding",
+      "info": "Set padding for section top-right-bottom-left (ex: 0 0 10px 0)"
+    },
+    {
+      "type": "header",
+      "content": "General Setting"
+    },   
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Title"
+    },
+    {
+      "type": "select",
+      "id": "title_border_style",
+      "label": "Title Border Style",
+      "options": [
+        {
+          "value": "",
+          "label": "No Border"
+        },
+        {
+          "value": "border-bottom",
+          "label": "Bottom Border"
+        },
+        {
+          "value": "border-middle",
+          "label": "Middle Border"
+        }
+      ],
+      "default": "border-bottom"
+    }, 
+    {
+      "type": "select",
+      "id": "title_align",
+      "label": "Title align",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        } 
+      ],
+      "default": "left"
+    },  
+    {
+      "type": "select",
+      "id": "design",
+      "label": "Testimonial Design",
+      "options": [
+        {
+          "value": "1",
+          "label": "Style 1"
+        },
+        {
+          "value": "2",
+          "label": "Style 2"
+        },
+        {
+          "value": "3",
+          "label": "Style 3"
+        },
+        {
+          "value": "4",
+          "label": "Style 4"
+        },
+        {
+          "value": "5",
+          "label": "Style 5"
+        },
+        {
+          "value": "6",
+          "label": "Style 6"
+        },
+        {
+          "value": "7",
+          "label": "Style 7"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type":"header",
+      "content": "Slider Config"
+    }, 
+    {
+      "type": "text",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": "5000"
+    }, 
+    {
+      "type": "text",
+      "id": "item_desktop",
+      "label": "Item Show On Desktop",
+      "default": "3"
+    }, 
+    {
+      "type": "text",
+      "id": "item_tablet",
+      "label": "Item Show On Tablet",
+      "default": "2"
+    },
+    {
+      "type": "text",
+      "id": "item_mobile",
+      "label": "Item Show On Mobile",
+      "default": "1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav",
+      "label": "Show Navigation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_paging",
+      "label": "Show Paging"
+    },
+    {
+      "type": "select",
+      "id": "nav_position",
+      "label": "Navigation Position",
+      "options": [
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "nav-center-images-only",
+          "label": "Middle of Images"
+        },
+        {
+          "value": "show-nav-title",
+          "label": "Top"
+        },
+        {
+          "value": "nav-bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "middle"
+    },
+    {
+      "type": "select",
+      "id": "nav_side",
+      "label": "Nav inside\/outside",
+      "options": [
+        {
+          "value": "",
+          "label": "Default"
+        },
+        {
+          "value": "nav-pos-inside",
+          "label": "Inside"
+        },
+        {
+          "value": "nav-pos-outside",
+          "label": "Outside"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "nav_type",
+      "label": "Nav Type",
+      "options": [
+        {
+          "value": "",
+          "label": "Default"
+        },
+        {
+          "value": "rounded-nav",
+          "label": "Rounded"
+        },
+        {
+          "value": "big-nav",
+          "label": "Big & Full Width"
+        },
+        {
+          "value": "nav-style-1",
+          "label": "Simple Arrow 1"
+        },
+        {
+          "value": "nav-style-2",
+          "label": "Simple Arrow 2"
+        },
+        {
+          "value": "nav-style-4",
+          "label": "Simple Arrow 3"
+        },
+        {
+          "value": "nav-style-3",
+          "label": "Square Grey Arrow"
+        }
+      ],
+      "default": "nav-style-4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav_hover",
+      "label": "Show nav on hover"
+    }, 
+    {
+      "type": "text",
+      "id": "item_margin",
+      "label": "Margin",
+      "info": "Margin each item.",
+      "default": "10"
+    } 
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content",
+          "default": "Hello, I want to thank you for creating a great template and for the excellent and quick support and help that you have been providing to me as I begin to work with it."
+        },
+        {
+          "type": "text",
+          "id": "name_author",
+          "label": "Name Author",
+          "default": "John Smith"
+        },
+        {
+          "type": "text",
+          "id": "desc_author",
+          "label": "Description Author",
+          "default": "CEO & Founder - Okler"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial",
+      "category": "Blog",
+      "settings": {
+
+      },
+      "blocks":[
+        {
+          "type": "item",
+          "settings":
+          {
+            "content": "Hello, I want to thank you for creating a great template and for the excellent and quick support and help that you have been providing to me as I begin to work with it.",
+            "name_author": "John Smith",
+            "desc_author": "CEO & Founder - Okler"
+          }
+        },
+        {
+          "type": "item",
+          "settings":
+          {
+            "content": "Hello, I want to thank you for creating a great template and for the excellent and quick support and help that you have been providing to me as I begin to work with it.",
+            "name_author": "John Smith",
+            "desc_author": "CEO & Founder - Okler"
+          }
+        }
+      ]
+    }
+  ] 
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

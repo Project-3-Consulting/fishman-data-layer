@@ -1,0 +1,47 @@
+
+<style> .additional-checkout-buttons { display: none; } </style>
+{%- capture breadcrumb -%}
+<div class="sp-page-header page-header-8">
+  <ul class="breadcrumb text-center">
+    <li class="current"><a href="/cart/"{% if settings.language_enable %} data-translate="cart.general.title"{% endif %}>{{ 'cart.general.title' | t }}</a></li>
+    <li class=""><i class="icon-angle-right"></i> <a href="/checkout/"{% if settings.language_enable %} data-translate="cart.general.checkout"{% endif %}>{{ 'cart.general.checkout' | t }}</a></li>
+    <li class="disable"><i class="icon-angle-right"></i> <a href="#"{% if settings.language_enable %} data-translate="cart.general.complete"{% endif %}>{{ 'cart.general.complete' | t }}</a></li>
+  </ul>
+</div>
+{%- endcapture -%}
+{%- if settings.sidebar_move == blank -%}
+{{breadcrumb}}
+{%- endif -%}  
+<div class="container">
+  <div class="row">
+    {%- assign sidebar_class = 'col-lg-3' -%}
+    {%- if settings.sidebar_left_cart != blank -%}
+    {%- assign main_class = 'col-lg-9' -%}
+    {%- endif -%} 
+    {%- if settings.sidebar_right_cart != blank -%}
+    {%- assign main_class = 'col-lg-9' -%} 
+    {%- endif -%}
+    {%- if settings.sidebar_left_cart != blank and settings.sidebar_right_cart != blank -%}
+    {%- assign main_class = 'col-lg-6' -%} 
+    {%- endif -%}  
+    {%- if settings.sidebar_left_cart == blank and settings.sidebar_right_cart == blank -%}
+    {%- assign main_class = 'col-lg-12' -%} 
+    {%- endif -%} 
+    <div class="{{main_class}} main-content main-cart">
+      {%- if settings.sidebar_move != blank -%}
+      {{breadcrumb}}
+      {%- endif -%}  
+      {% section 'cart-template' %}
+    </div>
+    {% if settings.sidebar_left_cart != blank %}
+    <div class="{{sidebar_class}} sidebar col-left">
+      {% section 'sidebar-left' %}
+    </div>
+    {% endif %}  
+    {% if settings.sidebar_right_cart != blank %}
+    <div class="{{sidebar_class}} sidebar-right col-right">
+      {% section 'sidebar-right' %}
+    </div>
+    {% endif %} 
+  </div>
+</div> 

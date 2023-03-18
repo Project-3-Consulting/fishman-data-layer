@@ -1,0 +1,11 @@
+<!-- /templates/collection.liquid -->
+{%- assign limit = 12 -%}
+{%- assign columns = 6 -%}
+{%- assign sidebar-left = false -%}
+{%- assign sidebar-right = false -%}
+
+{%- if settings.collection_view_mode == 'grid' or settings.collection_view_mode == 'divider' -%}
+	{%- include 'collection_grid' -%}
+{%- else -%}
+	{%- include 'collection_list' -%}
+{%- endif -%}
